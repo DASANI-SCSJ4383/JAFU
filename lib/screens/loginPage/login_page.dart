@@ -17,7 +17,7 @@ class LoginPage extends StatefulWidget {
 }
 
 class _SignInPageState extends State<LoginPage> {
-  DateTime pre_backpress = DateTime.now();
+  DateTime prebackpress = DateTime.now();
   bool isPasswordVisible = true;
   @override
   Widget build(BuildContext context) {
@@ -25,9 +25,9 @@ class _SignInPageState extends State<LoginPage> {
       builder: (context, orientation, deviceType) => SafeArea(
         child: WillPopScope(
           onWillPop: () async {
-            final timegap = DateTime.now().difference(pre_backpress);
+            final timegap = DateTime.now().difference(prebackpress);
             final cantExit = timegap >= Duration(seconds: 2);
-            pre_backpress = DateTime.now();
+            prebackpress = DateTime.now();
             if (cantExit) {
               final snack = SnackBar(
                 content: Text('Press Back button again to Exit'),

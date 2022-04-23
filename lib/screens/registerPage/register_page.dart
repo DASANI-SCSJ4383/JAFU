@@ -31,7 +31,7 @@ class _RegisterPageState extends State<RegisterPage> {
     final text = a.value.text;
     if (text.isNotEmpty) {
       if (text.length < 6) {
-        return 'Kata laluan mestilah melebihi 5 perkataan';
+        return 'Password must exceed 5 words';
       }
     }
     return null;
@@ -240,10 +240,21 @@ class _RegisterPageState extends State<RegisterPage> {
                                     ScaffoldMessenger.of(context).showSnackBar(snackBar);
                                   }
                                   else{
+                                    CoolAlert.show(
+                                      context: context,
+                                      type: CoolAlertType.loading
+                                    );
                                     String result = await widget._viewmodel.register(username.text,password.text,widget._phoneNum);
                                     if(result == "success"){
+                                      Navigator.pop(context);
                                       Alert(
                                         onWillPopActive: true,
+                                        closeFunction: (){
+                                          username.clear();
+                                          password.clear();
+                                          confirmpassword.clear();
+                                          Navigator.popAndPushNamed(context, '/login');
+                                        },
                                         context: context,
                                         type: AlertType.success,
                                         title: "SUCCESS",
@@ -265,6 +276,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                         ],
                                       ).show();
                                     }else{
+                                      Navigator.pop(context);
                                       Alert(
                                         onWillPopActive: true,
                                         context: context,

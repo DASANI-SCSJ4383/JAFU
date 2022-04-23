@@ -1,3 +1,4 @@
+import 'package:cool_alert/cool_alert.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:jafu/screens/widgets/constants.dart';
@@ -115,27 +116,13 @@ class _BodyState extends State<Body> {
                           ).show();
                         }else{
                           String fullNoTel = "+60" + phoneNum.text;
-                          BuildContext dialogContext;
-                          showDialog(
+                          CoolAlert.show(
                             context: context,
-                            barrierDismissible: false,
-                            builder: (BuildContext context) {
-                              dialogContext = context;
-                              return Dialog(
-                                child:  Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: const [
-                                      CircularProgressIndicator(),
-                                      Text("Sila Tunggu"),
-                                  ],
-                                ),
-                              );
-                            },
+                            type: CoolAlertType.loading
                           );
-                          
                           String a = await checkPhoneNumber(fullNoTel,"noTel");
                           if(a == "Network Problem"){
-                            Navigator.pop(dialogContext);
+                            Navigator.pop(context);
                             Alert(
                               context: context,
                               type: AlertType.error,
@@ -153,13 +140,13 @@ class _BodyState extends State<Body> {
                               ],
                             ).show();
                           }else if(a == "valid"){
-                            Navigator.pop(dialogContext);
+                            Navigator.pop(context);
                             // Navigator.pushNamed(context, '/otp',arguments: fullNoTel);
                             RegisterViewModel registerViewModel = RegisterViewModel();
                             Navigator.pushNamed(context, '/register',arguments: [fullNoTel,registerViewModel]);
                             phoneNum.clear();
                           }else{
-                            Navigator.pop(dialogContext);
+                            Navigator.pop(context);
                             Alert(
                               context: context,
                               type: AlertType.warning,
