@@ -9,10 +9,7 @@ class LoginViewmodel extends Viewmodel {
   AuthService get _service => dependency();
 
   Future<User> authenticate(String email, String password) async {
-    final User _user = await _service.authenticate(email: email, password: password);
-    if (_user == null) {
-      print("Not Found");
-    }
+    final User _user = await _service.authenticate(email,password);
     return _user;
   }
 

@@ -11,7 +11,7 @@ class UserViewmodel{
 
   bool get isUserSignedIn => _user != null;
 
-  void authenticate(User user) async => _user =
-      await _service.authenticate(email: user.email, password: user.password);
+  // void authenticate(User user) async => _user =
+  //     await _service.authenticate(email: user.email, password: user.password);
 
 }

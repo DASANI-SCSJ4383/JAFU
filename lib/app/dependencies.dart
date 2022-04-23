@@ -9,12 +9,13 @@ GetIt dependency = GetIt.instance;
 
 void init() {
   // Services
+  String url = "http://10.211.99.125/jafu/phoneApi/";
 
   dependency.registerLazySingleton<AuthService>(
-    () => AuthServiceRest());
+    () => AuthServiceRest(baseUrl: url));
   
   dependency.registerLazySingleton<RegService>(
-    () => RegServiceRest(baseUrl: 'http://10.211.99.125/jafu/phoneApi/'),
+    () => RegServiceRest(baseUrl: url),
   );
 
   // Viewmodels

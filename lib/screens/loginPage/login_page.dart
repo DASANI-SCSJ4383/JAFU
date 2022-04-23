@@ -4,8 +4,9 @@ import 'package:jafu/screens/widgets/constants.dart';
 import 'package:jafu/screens/widgets/my_text_button.dart';
 import 'package:jafu/screens/widgets/my_password_field.dart';
 import 'package:jafu/screens/widgets/my_text_field.dart';
-import 'package:jafu/viewmodel/reg_viewmodel.dart';
+import 'package:jafu/viewmodel/login_viewmodel.dart';
 import 'package:sizer/sizer.dart';
+import 'package:url_encoder/url_encoder.dart';
 
 class LoginPage extends StatefulWidget {
 
@@ -19,6 +20,11 @@ class LoginPage extends StatefulWidget {
 class _SignInPageState extends State<LoginPage> {
   DateTime prebackpress = DateTime.now();
   bool isPasswordVisible = true;
+  final username = TextEditingController();
+  final password = TextEditingController();
+  bool _visibility1 = true;
+  LoginViewmodel _viewmodel = LoginViewmodel();
+
   @override
   Widget build(BuildContext context) {
     return Sizer(
@@ -84,24 +90,72 @@ class _SignInPageState extends State<LoginPage> {
                                 SizedBox(
                                   height: 60,
                                 ),
-                                MyTextField(
-                                  hintText: 'Phone, email or username',
-                                  inputType: TextInputType.text,
+                                TextFormField(
+                                  controller: username,
+                                  style: kBodyText.copyWith(color: Colors.white,fontSize: 25),
+                                  decoration: InputDecoration(
+                                    hintText: "Username",
+                                    hintStyle: kBodyText,
+                                    fillColor: Colors.white,
+                                    focusedBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(25.0),
+                                      borderSide: BorderSide(
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                    enabledBorder: OutlineInputBorder(
+                                      borderSide: BorderSide(
+                                        color: Colors.grey,
+                                        width: 1,
+                                      ),
+                                      borderRadius: BorderRadius.circular(18),
+                                    ),
+                                  ),
+                                  onChanged: (text) => setState(() => username.text),
                                 ),
-                                MyPasswordField(
-                                  isPasswordVisible: isPasswordVisible,
-                                  onTap: () {
-                                    setState(() {
-                                      isPasswordVisible = !isPasswordVisible;
-                                    });
-                                  },
+                                SizedBox(
+                                  height: 20,
+                                ),
+                                TextFormField(
+                                  controller: password,
+                                  obscureText: _visibility1,
+                                  style: kBodyText.copyWith(color: Colors.white,fontSize: 25),
+                                  decoration: InputDecoration(
+                                    suffixIcon: IconButton(
+                                      icon: Icon(_visibility1 == true? Icons.visibility : Icons.visibility_off, color: Colors.white),
+                                      onPressed: () {
+                                        setState(() {
+                                          _visibility1 = !_visibility1;
+                                        });
+                                      },
+                                    ),
+                                    hintText: "Password",
+                                    hintStyle: kBodyText,
+                                    fillColor: Colors.white,
+                                    focusedBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(25.0),
+                                      borderSide: BorderSide(
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                    enabledBorder: OutlineInputBorder(
+                                      borderSide: BorderSide(
+                                        color: Colors.grey,
+                                        width: 1,
+                                      ),
+                                      borderRadius: BorderRadius.circular(18),
+                                    ),
+                                  ),
+                                  onChanged: (text) => setState(() => password.text),
                                 ),
                               ],
                             ),
                           ),
                           MyTextButton(
                             buttonName: 'Sign In',
-                            onTap: () {},
+                            onTap: () {
+                              _viewmodel.authenticate(username.text,password.text);
+                            },
                             bgColor: Colors.white,
                             textColor: Colors.black87,
                           ),

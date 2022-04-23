@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:jafu/viewmodel/viewmodel.dart';
 import 'package:provider/provider.dart';
+
+import 'viewmodel.dart';
 
 //----------------------------------------------------------------------------
 // Default View is with Selector and ChangeNotifierProvier
