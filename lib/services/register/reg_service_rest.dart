@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:jafu/services/register/reg_service.dart';
 import 'package:http/http.dart' as http;
+import 'package:retry/retry.dart';
 
 class RegServiceRest implements RegService {
 
@@ -10,14 +11,20 @@ class RegServiceRest implements RegService {
   @override
   Future<String> registerUser(String username, String password, String phoneNum) async {
     var url = _baseUrl + "/register";
-    var result = await http.post(Uri.parse(url), body: {
-      "username": username,
-      "password": password,
-      "phoneNum": phoneNum,
-    });
-    String response = result.body;
-    if (result == null || response == "false") return null;
-    return response;
+    final r = RetryOptions(maxAttempts: 6);
+    try{
+      var result = await r.retry(() => http.post(Uri.parse(url), body: {
+        "username": username,
+        "password": password,
+        "phoneNum": phoneNum,
+      }));
+      String response = result.body;
+      if (result == null || response == "false") return null;
+      return response;
+    }catch(e){
+      return "Network Problem";
+    }
+    
   }
 
   @override
