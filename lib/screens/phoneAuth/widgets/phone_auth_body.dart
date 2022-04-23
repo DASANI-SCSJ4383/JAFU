@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:jafu/screens/widgets/constants.dart';
+import 'package:jafu/viewmodel/reg_viewmodel.dart';
+import 'package:retry/retry.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:sizer/sizer.dart';
 import 'package:http/http.dart' as http;
 
@@ -15,11 +18,16 @@ class _BodyState extends State<Body> {
   final phoneNum = TextEditingController();
 
   Future<String> checkPhoneNumber(String phoneNum, String type) async {
-    var url = "http://10.211.101.169/jafu/phoneApi/checkInputAvailability/" + phoneNum + "/" + type;
-    var result = await http.get(Uri.parse(url));
-    String response = result.body;
-    if (result == null || response == "invalid") return null;
-    return response;
+    try{
+      final r = RetryOptions(maxAttempts: 6);
+      var url = "http://10.211.99.125/jafu/phoneApi/checkInputAvailability/" + phoneNum + "/" + type;
+      var result = await r.retry(() => http.get(Uri.parse(url)));
+      String response = result.body;
+      if (result == null || response == "invalid") return null;
+      return response;
+    }catch(e){
+      return "Network Problem";
+    }  
   }
 
   @override
@@ -83,54 +91,93 @@ class _BodyState extends State<Body> {
                     ),
                     InkWell(
                       onTap: () async {
-                        String fullNoTel = "+60" + phoneNum.text;
-
-                        BuildContext dialogContext;
-                        showDialog(
-                          context: context,
-                          barrierDismissible: false,
-                          builder: (BuildContext context) {
-                            dialogContext = context;
-                            return Dialog(
-                              child:  Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: const [
-                                    CircularProgressIndicator(),
-                                    Text("Sila Tunggu"),
-                                ],
-                              ),
-                            );
-                          },
-                        );
-                        
-                        String a = await checkPhoneNumber(fullNoTel,"noTel");
-                        if(a == "valid"){
-                          Navigator.pop(dialogContext);
-                          Navigator.pushNamed(context, '/otp',arguments: fullNoTel);
-                          // Navigator.pushNamed(context, '/register',arguments: fullNoTel);
-                          phoneNum.clear();
+                        FocusScopeNode currentFocus = FocusScope.of(context);
+                        if (!currentFocus.hasPrimaryFocus) {
+                          currentFocus.unfocus();
+                        }
+                        if(phoneNum.text == ""){
+                          Alert(
+                            onWillPopActive: true,
+                            context: context,
+                            type: AlertType.warning,
+                            title: "ALERT",
+                            desc: "Please input your phone number.",
+                            buttons: [
+                              DialogButton(
+                                child: Text(
+                                  "OK",
+                                  style: TextStyle(color: Colors.white, fontSize: 20),
+                                ),
+                                onPressed: () => Navigator.pop(context),
+                                width: 120,
+                              )
+                            ],
+                          ).show();
                         }else{
-                          Navigator.pop(dialogContext);
+                          String fullNoTel = "+60" + phoneNum.text;
+                          BuildContext dialogContext;
                           showDialog(
                             context: context,
+                            barrierDismissible: false,
                             builder: (BuildContext context) {
-                              // return object of type Dialog
-                              return AlertDialog(
-                                title:  Text("PERHATIAN"),
-                                content:  Text("Harap maaf, nombor telefon ini telah didaftarkan"),
-                                actions: <Widget>[
-                                  // usually buttons at the bottom of the dialog
-                                  TextButton(
-                                    child:  Text("Tutup"),
-                                    onPressed: () {
-                                      Navigator.of(context).pop();
-                                    },
-                                  ),
-                                ],
+                              dialogContext = context;
+                              return Dialog(
+                                child:  Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: const [
+                                      CircularProgressIndicator(),
+                                      Text("Sila Tunggu"),
+                                  ],
+                                ),
                               );
-                            }
+                            },
                           );
-                        }  
+                          
+                          String a = await checkPhoneNumber(fullNoTel,"noTel");
+                          if(a == "Network Problem"){
+                            Navigator.pop(dialogContext);
+                            Alert(
+                              context: context,
+                              type: AlertType.error,
+                              title: "NETWORK PROBLEM",
+                              desc: "Please check your internet connection.",
+                              buttons: [
+                                DialogButton(
+                                  child: Text(
+                                    "OK",
+                                    style: TextStyle(color: Colors.white, fontSize: 20),
+                                  ),
+                                  onPressed: () => Navigator.pop(context),
+                                  width: 120,
+                                )
+                              ],
+                            ).show();
+                          }else if(a == "valid"){
+                            Navigator.pop(dialogContext);
+                            // Navigator.pushNamed(context, '/otp',arguments: fullNoTel);
+                            RegisterViewModel registerViewModel = RegisterViewModel();
+                            Navigator.pushNamed(context, '/register',arguments: [fullNoTel,registerViewModel]);
+                            phoneNum.clear();
+                          }else{
+                            Navigator.pop(dialogContext);
+                            Alert(
+                              context: context,
+                              type: AlertType.warning,
+                              title: "INVALID",
+                              desc: "This number has been registered.",
+                              buttons: [
+                                DialogButton(
+                                  child: Text(
+                                    "OK",
+                                    style: TextStyle(color: Colors.white, fontSize: 20),
+                                  ),
+                                  onPressed: () => Navigator.pop(context),
+                                  width: 120,
+                                )
+                              ],
+                            ).show();
+                          } 
+                        }
                       },
                       child: Text(
                         'Hantar',

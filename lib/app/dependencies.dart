@@ -14,7 +14,7 @@ void init() {
     () => AuthServiceRest());
   
   dependency.registerLazySingleton<RegService>(
-    () => RegServiceRest(baseUrl: 'http://10.211.101.169/jafu/phoneApi/'),
+    () => RegServiceRest(baseUrl: 'http://10.211.99.125/jafu/phoneApi/'),
   );
 
   // Viewmodels

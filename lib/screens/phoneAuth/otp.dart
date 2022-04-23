@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_svg_provider/flutter_svg_provider.dart';
 import 'package:jafu/screens/widgets/constants.dart';
 import 'package:jafu/viewmodel/reg_viewmodel.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:sizer/sizer.dart';
 
 enum Status { Waiting, Error }
@@ -73,7 +74,7 @@ class _OtpState extends State<Otp> with SingleTickerProviderStateMixin {
           .then((value) async {
             await HapticFeedback.vibrate();
             // Navigator.pushNamed(context, '/register',arguments: widget._phoneNum);
-            RegisterViewModel registerViewModel = new RegisterViewModel();
+            RegisterViewModel registerViewModel = RegisterViewModel();
             Navigator.pushNamed(context, '/register',arguments: [widget._phoneNum,registerViewModel]);
           })
           .whenComplete(() {})
@@ -93,7 +94,35 @@ class _OtpState extends State<Otp> with SingleTickerProviderStateMixin {
         elevation: 0,
         leading: IconButton(
           onPressed: () {
-            Navigator.pop(context);
+            Alert(
+              context: context,
+              type: AlertType.warning,
+              title: "ALERT",
+              desc: "Are you sure you want to cancel this process?",
+              buttons: [
+                DialogButton(
+                  child: Text(
+                    "OK",
+                    style: TextStyle(color: Colors.white, fontSize: 20),
+                  ),
+                  onPressed: () {
+                    Navigator.pop(context);
+                    Navigator.pop(context);
+                  },
+                  width: 120,
+                ),
+                DialogButton(
+                  child: Text(
+                    "CANCEL",
+                    style: TextStyle(color: Colors.white, fontSize: 20),
+                  ),
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  width: 120,
+                )
+              ],
+            ).show();
           },
           icon: Image(
             width: 24,

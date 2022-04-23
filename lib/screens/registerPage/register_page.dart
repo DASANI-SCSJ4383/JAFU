@@ -4,6 +4,7 @@ import 'package:flutter_svg_provider/flutter_svg_provider.dart';
 import 'package:jafu/screens/widgets/constants.dart';
 import 'package:jafu/screens/widgets/my_text_button.dart';
 import 'package:jafu/viewmodel/reg_viewmodel.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
 
 class RegisterPage extends StatefulWidget {
 
@@ -46,10 +47,38 @@ class _RegisterPageState extends State<RegisterPage> {
             elevation: 0,
             leading: IconButton(
               onPressed: () {
-                username.clear();
-                password.clear();
-                confirmpassword.clear();
-                Navigator.pop(context);
+                Alert(
+                  context: context,
+                  type: AlertType.warning,
+                  title: "ALERT",
+                  desc: "Are you sure you want to cancel this process?",
+                  buttons: [
+                    DialogButton(
+                      child: Text(
+                        "OK",
+                        style: TextStyle(color: Colors.white, fontSize: 20),
+                      ),
+                      onPressed: () {
+                        username.clear();
+                        password.clear();
+                        confirmpassword.clear();
+                        Navigator.pop(context);
+                        Navigator.popAndPushNamed(context, '/login');
+                      },
+                      width: 120,
+                    ),
+                    DialogButton(
+                      child: Text(
+                        "CANCEL",
+                        style: TextStyle(color: Colors.white, fontSize: 20),
+                      ),
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      width: 120,
+                    )
+                  ],
+                ).show();
               },
               icon: Image(
                 width: 24,
@@ -194,6 +223,10 @@ class _RegisterPageState extends State<RegisterPage> {
                               MyTextButton(
                                 buttonName: 'Sign Up',
                                 onTap: ()async{
+                                  FocusScopeNode currentFocus = FocusScope.of(context);
+                                  if (!currentFocus.hasPrimaryFocus) {
+                                    currentFocus.unfocus();
+                                  }
                                   if(username.text.isEmpty || password.text.isEmpty || confirmpassword.text.isEmpty ){
                                     final SnackBar snackBar = SnackBar(content: Text("Please fill in all the field to proceed."),
                                                                 duration: Duration(seconds: 1, milliseconds: 500),
@@ -208,25 +241,52 @@ class _RegisterPageState extends State<RegisterPage> {
                                   }
                                   else{
                                     String result = await widget._viewmodel.register(username.text,password.text,widget._phoneNum);
-                                    print(result);
                                     if(result == "success"){
-                                      CoolAlert.show(
+                                      Alert(
+                                        onWillPopActive: true,
                                         context: context,
-                                        type: CoolAlertType.success,
-                                        text: "Your registration was successful!",
-                                      );
-                                    }else if(result == null){
-                                      CoolAlert.show(
-                                        context: context,
-                                        type: CoolAlertType.warning,
-                                        text: "Your registration was unsuccessful!",
-                                      );
+                                        type: AlertType.success,
+                                        title: "SUCCESS",
+                                        desc: "Your registration was successful.",
+                                        buttons: [
+                                          DialogButton(
+                                            child: Text(
+                                              "OK",
+                                              style: TextStyle(color: Colors.white, fontSize: 20),
+                                            ),
+                                            onPressed: (){
+                                              username.clear();
+                                              password.clear();
+                                              confirmpassword.clear();
+                                              Navigator.popAndPushNamed(context, '/login');
+                                            },
+                                            width: 120,
+                                          )
+                                        ],
+                                      ).show();
                                     }else{
-                                      CoolAlert.show(
+                                      Alert(
+                                        onWillPopActive: true,
                                         context: context,
-                                        type: CoolAlertType.error,
-                                        text: "Something went wrong",
-                                      );
+                                        type: AlertType.error,
+                                        title: "ERROR",
+                                        desc: "Something went wrong. Please try again.",
+                                        buttons: [
+                                          DialogButton(
+                                            child: Text(
+                                              "OK",
+                                              style: TextStyle(color: Colors.white, fontSize: 20),
+                                            ),
+                                            onPressed: (){
+                                              username.clear();
+                                              password.clear();
+                                              confirmpassword.clear();
+                                              Navigator.popAndPushNamed(context, '/login');
+                                            },
+                                            width: 120,
+                                          )
+                                        ],
+                                      ).show();
                                     }
                                   }
                                 },

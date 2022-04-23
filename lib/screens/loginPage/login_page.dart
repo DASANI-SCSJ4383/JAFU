@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:jafu/screens/widgets/constants.dart';
 import 'package:jafu/screens/widgets/my_text_button.dart';
 import 'package:jafu/screens/widgets/my_password_field.dart';
@@ -16,30 +17,46 @@ class LoginPage extends StatefulWidget {
 }
 
 class _SignInPageState extends State<LoginPage> {
+  DateTime pre_backpress = DateTime.now();
   bool isPasswordVisible = true;
   @override
   Widget build(BuildContext context) {
     return Sizer(
       builder: (context, orientation, deviceType) => SafeArea(
-        child: Scaffold(
-          appBar: AppBar(
-            backgroundColor: kBackgroundColor,
-            automaticallyImplyLeading: false,
-            elevation: 0,
-            // leading: IconButton(
-            //   onPressed: () {
-            //     Navigator.pop(context);
-            //   },
-            //   icon: Image(
-            //     width: 24,
-            //     color: Colors.white,
-            //     image: Svg('assets/images/back_arrow.svg'),
-            //   ),
-            // ),
-          ),
-          body: SafeArea(
-            //to make page scrollable
-            child: CustomScrollView(
+        child: WillPopScope(
+          onWillPop: () async {
+            final timegap = DateTime.now().difference(pre_backpress);
+            final cantExit = timegap >= Duration(seconds: 2);
+            pre_backpress = DateTime.now();
+            if (cantExit) {
+              final snack = SnackBar(
+                content: Text('Press Back button again to Exit'),
+                duration: Duration(seconds: 2),
+              );
+              ScaffoldMessenger.of(context).showSnackBar(snack);
+              return false;
+            } else {
+              SystemNavigator.pop();
+              return true;
+            }
+          },
+          child: Scaffold(
+            appBar: AppBar(
+              backgroundColor: kBackgroundColor,
+              automaticallyImplyLeading: false,
+              elevation: 0,
+              // leading: IconButton(
+              //   onPressed: () {
+              //     Navigator.pop(context);
+              //   },
+              //   icon: Image(
+              //     width: 24,
+              //     color: Colors.white,
+              //     image: Svg('assets/images/back_arrow.svg'),
+              //   ),
+              // ),
+            ),
+            body: CustomScrollView(
               reverse: true,
               slivers: [
                 SliverFillRemaining(
