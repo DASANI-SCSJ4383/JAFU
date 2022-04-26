@@ -5,6 +5,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:jafu/models/user.dart';
+import 'package:jafu/screens/homePage/home_page.dart';
 import 'package:jafu/screens/widgets/constants.dart';
 import 'package:jafu/screens/widgets/my_text_button.dart';
 import 'package:jafu/viewmodel/login_viewmodel.dart';
@@ -214,7 +215,11 @@ class _SignInPageState extends State<LoginPage> {
                                 SharedPreferences preferences = await SharedPreferences.getInstance();
                                 preferences.setString('user', jsonEncode(a));
                                 print(a.username);
-                                Navigator.popAndPushNamed(context, '/homepage',arguments: _userviewmodel);
+                                // Navigator.popAndPushNamed(context, '/homepage',arguments: _userviewmodel);
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(builder: (context) =>  Homepage(_userviewmodel)),
+                                );
                               }
                             },
                             bgColor: Colors.white,

@@ -6,10 +6,15 @@ import 'package:jafu/screens/facerecognition/signup.dart';
 import 'package:jafu/services/facerecognition/database.dart';
 import 'package:jafu/services/facerecognition/facenet.service.dart';
 import 'package:jafu/services/facerecognition/ml_kit_service.dart';
+import 'package:jafu/viewmodel/user_viewmodel.dart';
 
 class Menu extends StatefulWidget {
-  static Route route() =>
-      MaterialPageRoute(builder: (context) => Menu());
+  static Route route({userviewmodel}) =>
+      MaterialPageRoute(builder: (context) => Menu(userviewmodel: userviewmodel));
+
+  final UserViewmodel _userviewmodel;
+
+  Menu({userviewmodel}) : _userviewmodel = userviewmodel;
 
   @override
   State<Menu> createState() => _MenuState();
@@ -48,7 +53,7 @@ class _MenuState extends State<Menu> {
 
     // start the services
     await _faceNetService.loadModel();
-    await _dataBaseService.loadDB();
+    await _dataBaseService.loadDB(widget._userviewmodel);
     _mlKitService.initialize();
 
     _setLoading(false);
@@ -138,6 +143,7 @@ class _MenuState extends State<Menu> {
                               context,
                               MaterialPageRoute(
                                 builder: (BuildContext context) => SignIn(
+                                  widget._userviewmodel,
                                   cameraDescription: cameraDescription,
                                 ),
                               ),
@@ -179,10 +185,11 @@ class _MenuState extends State<Menu> {
                         ),
                         InkWell(
                           onTap: () {
+                            print(widget._userviewmodel.user.userID);
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (BuildContext context) => SignUp(cameraDescription),
+                                builder: (BuildContext context) => SignUp(cameraDescription,widget._userviewmodel),
                               ),
                             );
                           },

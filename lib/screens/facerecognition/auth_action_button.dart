@@ -9,10 +9,12 @@ import 'package:jafu/screens/homePage/home_page.dart';
 import 'package:jafu/services/facerecognition/camera.service.dart';
 import 'package:jafu/services/facerecognition/database.dart';
 import 'package:jafu/services/facerecognition/facenet.service.dart';
+import 'package:jafu/viewmodel/user_viewmodel.dart';
 
 class AuthActionButton extends StatefulWidget {
-  AuthActionButton(this._initializeControllerFuture,
+  AuthActionButton(this._userviewmodel,this._initializeControllerFuture,
       {Key key, @required this.onPressed, @required this.isLogin, this.reload});
+  final UserViewmodel _userviewmodel;
   final Future _initializeControllerFuture;
   final Function onPressed;
   final bool isLogin;
@@ -41,12 +43,14 @@ class _AuthActionButtonState extends State<AuthActionButton> {
     String password = _passwordTextEditingController.text;
 
     /// creates a new user in the 'database'
-    await _dataBaseService.saveData(user, password, predictedData);
+    print(widget._userviewmodel.user.userID);
+    await _dataBaseService.saveData(user, password, predictedData,widget._userviewmodel);
 
     /// resets the face stored in the face net sevice
     this._faceNetService.setPredictedData(null);
     Navigator.push(context,
-        MaterialPageRoute(builder: (BuildContext context) => Menu()));
+        MaterialPageRoute(
+              builder: (BuildContext context) => Homepage(widget._userviewmodel)));
   }
 
   Future _signIn(context) async {
@@ -54,10 +58,10 @@ class _AuthActionButtonState extends State<AuthActionButton> {
 
     if (this.predictedUser.password == password) {
       print("jadiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii");
-      // Navigator.push(
-      //     context,
-      //     MaterialPageRoute(
-      //         builder: (BuildContext context) => Homepage()));
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (BuildContext context) => Homepage(widget._userviewmodel)));
     } else {
       showDialog(
         context: context,

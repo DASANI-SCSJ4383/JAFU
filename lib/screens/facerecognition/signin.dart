@@ -12,11 +12,13 @@ import 'dart:math' as math;
 import 'package:jafu/services/facerecognition/camera.service.dart';
 import 'package:jafu/services/facerecognition/facenet.service.dart';
 import 'package:jafu/services/facerecognition/ml_kit_service.dart';
+import 'package:jafu/viewmodel/user_viewmodel.dart';
 
 class SignIn extends StatefulWidget {
   final CameraDescription cameraDescription;
+  final UserViewmodel _userViewmodel;
 
-  const SignIn({
+  const SignIn(this._userViewmodel,{
     Key key,
     @required this.cameraDescription,
   }) : super(key: key);
@@ -227,6 +229,7 @@ class SignInState extends State<SignIn> {
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: !_bottomSheetVisible
           ? AuthActionButton(
+              widget._userViewmodel,
               _initializeControllerFuture,
               onPressed: onShot,
               isLogin: true,

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:jafu/screens/facerecognition/menu.dart';
-import 'package:jafu/screens/homePage/home_page.dart';
 import 'package:jafu/screens/initialpage/initial.dart';
 import 'package:jafu/screens/loginPage/login_page.dart';
 import 'package:jafu/screens/phoneAuth/otp.dart';
@@ -32,7 +31,7 @@ Route<dynamic> createRoute(settings) {
       return RegisterPage.route(phoneNumber: settings.arguments[0],viewmodel: settings.arguments[1],);
 
     case '/facerecognition':
-      return Menu.route();
+      return Menu.route(userviewmodel: settings.arguments as UserViewmodel);
 
   }
   return null;

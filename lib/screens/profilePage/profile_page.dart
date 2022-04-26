@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:jafu/viewmodel/user_viewmodel.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ProfilePage extends StatelessWidget {
 
@@ -12,13 +13,35 @@ class ProfilePage extends StatelessWidget {
     return Scaffold(
       body: Column(
         children: <Widget>[
+          // CategorySelector(),
           Expanded(
             child: Container(
-              margin: EdgeInsets.all(15),
+              margin: const EdgeInsets.only(top: 15.0, bottom: 5.0),
               decoration: BoxDecoration(
-                color: Color.fromARGB(255, 201, 197, 197),
+                color: Colors.white,
                 borderRadius: BorderRadius.all(Radius.circular(20))
               ),
+              child: Row(
+                children: [
+                  ElevatedButton(
+                    onPressed: (){
+                      print(_userviewmodel.user.username);
+                      Navigator.pushNamed(context, '/facerecognition',arguments: _userviewmodel);
+                    }, 
+                    child: Text("Test Face Reognition")
+                  ),
+                  SizedBox(height: 10,),
+                  ElevatedButton(
+                    onPressed: ()async{
+                      SharedPreferences prefs = await SharedPreferences.getInstance();
+                      prefs.remove('user');
+                      Navigator.popAndPushNamed(context, '/login');
+                    }, 
+                    child: Text("Logout")
+                  )
+                ],
+              )
+              
             ),
           ),
         ],

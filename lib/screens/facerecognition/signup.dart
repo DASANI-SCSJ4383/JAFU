@@ -9,11 +9,13 @@ import 'package:jafu/screens/facerecognition/facepainter.dart';
 import 'package:jafu/services/facerecognition/camera.service.dart';
 import 'package:jafu/services/facerecognition/facenet.service.dart';
 import 'package:jafu/services/facerecognition/ml_kit_service.dart';
+import 'package:jafu/viewmodel/user_viewmodel.dart';
 
 class SignUp extends StatefulWidget {
   final CameraDescription _cameraDescription;
+  final UserViewmodel _userViewmodel;
 
-  const SignUp(CameraDescription cameraDescription) : _cameraDescription = cameraDescription; 
+  const SignUp(CameraDescription cameraDescription,UserViewmodel userViewmodel) : _cameraDescription = cameraDescription,_userViewmodel = userViewmodel; 
 
   @override
   State<SignUp> createState() => _SignUpState();
@@ -221,6 +223,7 @@ class _SignUpState extends State<SignUp> {
         floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
         floatingActionButton: !_bottomSheetVisible
             ? AuthActionButton(
+                widget._userViewmodel,
                 _initializeControllerFuture,
                 onPressed: onShot,
                 isLogin: false,

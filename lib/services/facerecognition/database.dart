@@ -1,6 +1,9 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:jafu/viewmodel/user_viewmodel.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:retry/retry.dart';
+import '../../models/user.dart' as user;
 import 'package:http/http.dart' as http;
 
 class DataBaseService {
@@ -21,25 +24,27 @@ class DataBaseService {
   Map<String, dynamic> _db = Map<String, dynamic>();
   Map<String, dynamic> get db => this._db;
 
-  Future<void> testing(String a) async{
-    var url = "http://10.211.99.139/jafu/try.php";
+  Future<void> testing(String a,String userID) async{
+    var url = "http://192.168.0.100/jafu/phoneApi/try.php";
+    print(url);
     var result = await http.post(Uri.parse(url), body:{
-      "userID" : "1",
+      "userID" : userID,
       "faceData" : a
     });
-    print(result.body);
+    print(result);
   }
 
-  Future<void> getData() async {
-    var url = "http://10.211.99.139/jafu/try2.php";
+  Future<void> getData(UserViewmodel userViewmodel) async {
+    var url = "http://192.168.0.100/jafu/phoneApi/facedata/" + userViewmodel.user.userID;
     var result = await http.get(Uri.parse(url));
-    if (result == null) return null;
+    print(result.body);
+    if (result.body == 'failed') return null;
     _db = jsonDecode(result.body);
   }
 
   /// loads a simple json file.
-  Future loadDB() async {
-    // getData();
+  Future loadDB(UserViewmodel userViewmodel) async {
+    getData(userViewmodel);
     // var tempDir = await getApplicationDocumentsDirectory();
     // String _embPath = tempDir.path + '/emb.json';
 
@@ -52,11 +57,11 @@ class DataBaseService {
 
   /// [Name]: name of the new user
   /// [Data]: Face representation for Machine Learning model
-  Future saveData(String user, String password, List modelData) async {
+  Future saveData(String user, String password, List modelData,UserViewmodel userViewmodel) async {
     String userAndPass = user + ':' + password;
     _db[userAndPass] = modelData;
     String myJson = jsonEncode(_db);
-    testing(myJson);
+    testing(myJson,userViewmodel.user.userID);
     // jsonFile.writeAsStringSync(json.encode(_db));
   }
 
