@@ -5,7 +5,6 @@ import '../../models/user.dart' as user;
 import 'auth_service.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import 'package:url_encoder/url_encoder.dart'; 
 
 class AuthServiceRest implements AuthService {
 
@@ -16,8 +15,11 @@ class AuthServiceRest implements AuthService {
   AuthServiceRest({@required baseUrl}) : _baseUrl = baseUrl;
 
   @override
-  Future<user.User> authenticate(String username, String password) async {
-    var url = _baseUrl + "/login/${urlEncode(text: username)}/${urlEncode(text: password)}";
+  Future<user.User> authenticate(String noTel, String password) async {
+    var encodedNoTel = Uri.encodeComponent (noTel);
+    var encodedPass = Uri.encodeComponent (password);
+    var url = _baseUrl + "login/$encodedNoTel/$encodedPass";
+    // var url = _baseUrl + "login/${urlEncode(text: noTel)}/${urlEncode(text: password)}";
     final r = RetryOptions(maxAttempts: 6);
     try{
       var result = await r.retry(() => http.get(Uri.parse(url)));
@@ -58,13 +60,12 @@ class AuthServiceRest implements AuthService {
 
   Future<String> testing(String a) async{
     print("sini");
-    var url = "http://10.211.100.10/jafu/try.php";
+    var url = "http://10.211.99.139/jafu/try.php";
     var result = await http.post(Uri.parse(url), body:{
       "userID" : "4",
       "faceData" : a
     });
     print(result.body);
-    print("kkkkkkk");
   }
 
 }

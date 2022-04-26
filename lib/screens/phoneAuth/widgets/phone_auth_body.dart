@@ -21,7 +21,7 @@ class _BodyState extends State<Body> {
   Future<String> checkPhoneNumber(String phoneNum, String type) async {
     try{
       final r = RetryOptions(maxAttempts: 6);
-      var url = "http://10.211.99.125/jafu/phoneApi/checkInputAvailability/" + phoneNum + "/" + type;
+      var url = "http://10.211.99.139/jafu/phoneApi/checkInputAvailability/" + phoneNum + "/" + type;
       var result = await r.retry(() => http.get(Uri.parse(url)));
       String response = result.body;
       if (result == null || response == "invalid") return null;

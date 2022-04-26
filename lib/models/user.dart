@@ -1,20 +1,18 @@
 
 class User{
-  dynamic _id; // Use dynamic type because json-server id is int and firestore id is string
-  String _name;
+  String _userID; // Use dynamic type because json-server userID is int and firestore userID is string
+  String _username;
   String _email;
   String _password;
   String _address;
-  String _photoUrl;
+  String _userType;
   String _phoneNum;
 
-  // ignore: unnecessary_getters_setters
-  get id => _id;
-  // ignore: unnecessary_getters_setters
-  set id(value) => _id = value;
+  get userID => _userID;
+  set userID(value) => _userID = value;
 
-  get name => _name;
-  set name(value) => _name = value;
+  get username => _username;
+  set username(value) => _username = value;
 
   get email => _email;
   set email(value) => _email = value;
@@ -25,58 +23,58 @@ class User{
   get address => _address;
   set address(value) => _address = value;
 
-  get photoUrl => _photoUrl;
-  set photoUrl(value) => _photoUrl = value;
+  get userType => _userType;
+  set userType(value) => _userType = value;
 
   get phoneNum => _phoneNum;
   set phoneNum(value) => _phoneNum = value;
 
   User(
       {
-        dynamic id,
-        String name = '',
+        dynamic userID,
+        String username = '',
         String email = '',
         String password = '',
         String address = '',
-        String photoUrl = '',
+        String userType = '',
         String phoneNum = '',
       }
-  ) : _id = id,
-      _name = name,
+  ) : _userID = userID,
+      _username = username,
       _email = email,
       _password = password,
       _address = address,
-      _photoUrl = photoUrl,
+      _userType = userType,
       _phoneNum = phoneNum;
 
   User.copy(User from)
       : this(
-            id: from.id,
-            name: from.name,
+            userID: from.userID,
+            username: from.username,
             email: from.email,
             password: from.password,
             address: from.address,
-            photoUrl: from.photoUrl,
+            userType: from.userType,
             phoneNum: from.phoneNum,);
 
   User.fromJson(Map<String, dynamic> json)
       : this(
-          id: json['id'],
-          name: json['name'],
+          userID: json['userID'],
+          username: json['username'],
           email: json['email'],
           password: json['password'],
           address: json['address'],
-          photoUrl: json['photoUrl'],
+          userType: json['userType'],
           phoneNum: json['phoneNum'],
         );
 
   Map<String, dynamic> toJson() => {
-        'id': id,
-        'name': name,
-        'email': photoUrl,
+        'userID': userID,
+        'username': username,
+        'email': userType,
         'password': password,
         'address': address,
-        'photoUrl': photoUrl,
+        'userType': userType,
         'phoneNum': phoneNum,
       };
 }

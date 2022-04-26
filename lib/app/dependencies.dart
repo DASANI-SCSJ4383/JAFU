@@ -9,7 +9,7 @@ GetIt dependency = GetIt.instance;
 
 void init() {
   // Services
-  String url = "http://10.211.99.125/jafu/phoneApi/";
+  String url = "http://10.211.99.139/jafu/phoneApi/";
 
   dependency.registerLazySingleton<AuthService>(
     () => AuthServiceRest(baseUrl: url));

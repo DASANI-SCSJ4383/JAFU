@@ -22,19 +22,16 @@ class DataBaseService {
   Map<String, dynamic> get db => this._db;
 
   Future<void> testing(String a) async{
-    print("ooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo");
-    print(a);
-    var url = "http://10.211.100.10/jafu/try.php";
+    var url = "http://10.211.99.139/jafu/try.php";
     var result = await http.post(Uri.parse(url), body:{
-      "userID" : "99",
+      "userID" : "1",
       "faceData" : a
     });
-    print("oooooooooooooooooooooooooo");
     print(result.body);
   }
 
   Future<void> getData() async {
-    var url = "http://10.211.100.10/jafu/try2.php";
+    var url = "http://10.211.99.139/jafu/try2.php";
     var result = await http.get(Uri.parse(url));
     if (result == null) return null;
     _db = jsonDecode(result.body);

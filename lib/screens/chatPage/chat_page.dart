@@ -1,0 +1,28 @@
+import 'package:flutter/material.dart';
+import 'package:jafu/viewmodel/user_viewmodel.dart';
+
+class ChatPage extends StatelessWidget {
+
+  final UserViewmodel _userviewmodel;
+  const ChatPage(UserViewmodel userviewmodel)
+      : _userviewmodel = userviewmodel;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Column(
+        children: <Widget>[
+          Expanded(
+            child: Container(
+              margin: EdgeInsets.all(15),
+              decoration: BoxDecoration(
+                color: Color.fromARGB(255, 201, 197, 197),
+                borderRadius: BorderRadius.all(Radius.circular(20))
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}

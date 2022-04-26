@@ -54,10 +54,10 @@ class _AuthActionButtonState extends State<AuthActionButton> {
 
     if (this.predictedUser.password == password) {
       print("jadiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii");
-      Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (BuildContext context) => Homepage()));
+      // Navigator.push(
+      //     context,
+      //     MaterialPageRoute(
+      //         builder: (BuildContext context) => Homepage()));
     } else {
       showDialog(
         context: context,

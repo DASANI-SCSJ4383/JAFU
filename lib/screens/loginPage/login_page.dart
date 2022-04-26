@@ -1,12 +1,16 @@
+import 'dart:convert';
+import 'package:cool_alert/cool_alert.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:jafu/models/user.dart';
 import 'package:jafu/screens/widgets/constants.dart';
 import 'package:jafu/screens/widgets/my_text_button.dart';
-import 'package:jafu/screens/widgets/my_password_field.dart';
-import 'package:jafu/screens/widgets/my_text_field.dart';
 import 'package:jafu/viewmodel/login_viewmodel.dart';
+import 'package:jafu/viewmodel/user_viewmodel.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sizer/sizer.dart';
-import 'package:url_encoder/url_encoder.dart';
 
 class LoginPage extends StatefulWidget {
 
@@ -22,8 +26,19 @@ class _SignInPageState extends State<LoginPage> {
   bool isPasswordVisible = true;
   final username = TextEditingController();
   final password = TextEditingController();
+  final phoneNum = TextEditingController();
   bool _visibility1 = true;
+  FirebaseMessaging _messaging;
+  String _token;
   LoginViewmodel _viewmodel = LoginViewmodel();
+
+  getToken() async {
+    await Firebase.initializeApp();
+    _messaging = FirebaseMessaging.instance;
+    _messaging.getToken().then((token) {
+      _token = token;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -90,11 +105,35 @@ class _SignInPageState extends State<LoginPage> {
                                 SizedBox(
                                   height: 60,
                                 ),
+                                // TextFormField(
+                                //   controller: username,
+                                //   style: kBodyText.copyWith(color: Colors.white,fontSize: 25),
+                                //   decoration: InputDecoration(
+                                //     hintText: "Username",
+                                //     hintStyle: kBodyText,
+                                //     fillColor: Colors.white,
+                                //     focusedBorder: OutlineInputBorder(
+                                //       borderRadius: BorderRadius.circular(25.0),
+                                //       borderSide: BorderSide(
+                                //         color: Colors.white,
+                                //       ),
+                                //     ),
+                                //     enabledBorder: OutlineInputBorder(
+                                //       borderSide: BorderSide(
+                                //         color: Colors.grey,
+                                //         width: 1,
+                                //       ),
+                                //       borderRadius: BorderRadius.circular(18),
+                                //     ),
+                                //   ),
+                                //   onChanged: (text) => setState(() => username.text),
+                                // ),
                                 TextFormField(
-                                  controller: username,
+                                  controller: phoneNum,
                                   style: kBodyText.copyWith(color: Colors.white,fontSize: 25),
                                   decoration: InputDecoration(
-                                    hintText: "Username",
+                                    prefixIcon: Padding(padding: EdgeInsets.all(15), child: Text('+60', style: kBodyText.copyWith(color: Colors.white))),
+                                    hintText: "Phone Number",
                                     hintStyle: kBodyText,
                                     fillColor: Colors.white,
                                     focusedBorder: OutlineInputBorder(
@@ -111,7 +150,12 @@ class _SignInPageState extends State<LoginPage> {
                                       borderRadius: BorderRadius.circular(18),
                                     ),
                                   ),
-                                  onChanged: (text) => setState(() => username.text),
+                                  onChanged: (text) => setState(() => phoneNum.text),
+                                  keyboardType:
+                                      TextInputType.numberWithOptions(decimal: false),
+                                  inputFormatters: [
+                                    FilteringTextInputFormatter.allow(RegExp(r'[0-9]'))
+                                  ],
                                 ),
                                 SizedBox(
                                   height: 20,
@@ -153,8 +197,25 @@ class _SignInPageState extends State<LoginPage> {
                           ),
                           MyTextButton(
                             buttonName: 'Sign In',
-                            onTap: () {
-                              _viewmodel.authenticate(username.text,password.text);
+                            onTap: ()async {
+                              CoolAlert.show(
+                                context: context,
+                                type: CoolAlertType.loading
+                              );
+                              String fullNoTel = "+60" + phoneNum.text;
+                              User a = await _viewmodel.authenticate(fullNoTel,password.text);
+                              if(a == null){
+                                Navigator.pop(context);
+                              }else{
+                                UserViewmodel _userviewmodel = UserViewmodel();
+                                _userviewmodel.user = a;
+                                // await _viewmodel.updateUserToken(getToken());
+                                Navigator.pop(context);
+                                SharedPreferences preferences = await SharedPreferences.getInstance();
+                                preferences.setString('user', jsonEncode(a));
+                                print(a.username);
+                                Navigator.popAndPushNamed(context, '/homepage',arguments: _userviewmodel);
+                              }
                             },
                             bgColor: Colors.white,
                             textColor: Colors.black87,
