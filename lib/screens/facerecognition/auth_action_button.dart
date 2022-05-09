@@ -43,7 +43,6 @@ class _AuthActionButtonState extends State<AuthActionButton> {
     String password = _passwordTextEditingController.text;
 
     /// creates a new user in the 'database'
-    print(widget._userviewmodel.user.userID);
     await _dataBaseService.saveData(user, password, predictedData,widget._userviewmodel);
 
     /// resets the face stored in the face net sevice
@@ -57,7 +56,6 @@ class _AuthActionButtonState extends State<AuthActionButton> {
     String password = _passwordTextEditingController.text;
 
     if (this.predictedUser.password == password) {
-      print("jadiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii");
       Navigator.push(
           context,
           MaterialPageRoute(

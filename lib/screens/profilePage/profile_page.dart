@@ -25,7 +25,6 @@ class ProfilePage extends StatelessWidget {
                 children: [
                   ElevatedButton(
                     onPressed: (){
-                      print(_userviewmodel.user.username);
                       Navigator.pushNamed(context, '/facerecognition',arguments: _userviewmodel);
                     }, 
                     child: Text("Test Face Reognition")

@@ -12,7 +12,6 @@ class HomePageViewModel extends Viewmodel {
   
   Future<void> testing() async {
     String myJson = jsonEncode(testList);
-    print(myJson);
   }
 
   Future<void> test() async {

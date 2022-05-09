@@ -19,9 +19,10 @@ class _BodyState extends State<Body> {
   final phoneNum = TextEditingController();
 
   Future<String> checkPhoneNumber(String phoneNum, String type) async {
+    var encodedNoTel = Uri.encodeComponent (phoneNum);
     try{
       final r = RetryOptions(maxAttempts: 6);
-      var url = "http://192.168.0.100/jafu/phoneApi/checkInputAvailability/" + phoneNum + "/" + type;
+      var url = "http://159.223.63.41/phoneApi/checkInputAvailability/" + encodedNoTel + "/" + type;
       var result = await r.retry(() => http.get(Uri.parse(url)));
       String response = result.body;
       if (result == null || response == "invalid") return null;
@@ -141,9 +142,9 @@ class _BodyState extends State<Body> {
                             ).show();
                           }else if(a == "valid"){
                             Navigator.pop(context);
-                            Navigator.pushNamed(context, '/otp',arguments: fullNoTel);
-                            // RegisterViewModel registerViewModel = RegisterViewModel();
-                            // Navigator.pushNamed(context, '/register',arguments: [fullNoTel,registerViewModel]);
+                            // Navigator.pushNamed(context, '/otp',arguments: fullNoTel);
+                            RegisterViewModel registerViewModel = RegisterViewModel();
+                            Navigator.pushNamed(context, '/register',arguments: [fullNoTel,registerViewModel]);
                             phoneNum.clear();
                           }else{
                             Navigator.pop(context);

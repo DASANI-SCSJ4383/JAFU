@@ -25,19 +25,16 @@ class DataBaseService {
   Map<String, dynamic> get db => this._db;
 
   Future<void> testing(String a,String userID) async{
-    var url = "http://192.168.0.100/jafu/phoneApi/try.php";
-    print(url);
+    var url = "http://159.223.63.41/phoneApi/try.php";
     var result = await http.post(Uri.parse(url), body:{
       "userID" : userID,
       "faceData" : a
     });
-    print(result);
   }
 
   Future<void> getData(UserViewmodel userViewmodel) async {
-    var url = "http://192.168.0.100/jafu/phoneApi/facedata/" + userViewmodel.user.userID;
+    var url = "http://159.223.63.41/phoneApi/facedata/" + userViewmodel.user.userID;
     var result = await http.get(Uri.parse(url));
-    print(result.body);
     if (result.body == 'failed') return null;
     _db = jsonDecode(result.body);
   }

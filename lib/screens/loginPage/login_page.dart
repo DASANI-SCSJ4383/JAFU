@@ -214,7 +214,6 @@ class _SignInPageState extends State<LoginPage> {
                                 Navigator.pop(context);
                                 SharedPreferences preferences = await SharedPreferences.getInstance();
                                 preferences.setString('user', jsonEncode(a));
-                                print(a.username);
                                 // Navigator.popAndPushNamed(context, '/homepage',arguments: _userviewmodel);
                                 Navigator.push(
                                   context,

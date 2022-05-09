@@ -185,7 +185,6 @@ class _MenuState extends State<Menu> {
                         ),
                         InkWell(
                           onTap: () {
-                            print(widget._userviewmodel.user.userID);
                             Navigator.push(
                               context,
                               MaterialPageRoute(

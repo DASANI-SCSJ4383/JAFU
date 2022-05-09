@@ -59,13 +59,11 @@ class AuthServiceRest implements AuthService {
   }
 
   Future<String> testing(String a) async{
-    print("sini");
     var url = "http://10.211.99.139/jafu/try.php";
     var result = await http.post(Uri.parse(url), body:{
       "userID" : "4",
       "faceData" : a
     });
-    print(result.body);
   }
 
 }
