@@ -16,11 +16,13 @@ class ProfilePage extends StatelessWidget {
           // CategorySelector(),
           Expanded(
             child: Container(
+              color: Color.fromARGB(255, 201, 197, 197),
               margin: const EdgeInsets.only(top: 15.0, bottom: 5.0),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.all(Radius.circular(20))
-              ),
+              // margin: const EdgeInsets.only(top: 15.0, bottom: 5.0),
+              // decoration: BoxDecoration(
+              //   color: Colors.white,
+              //   borderRadius: BorderRadius.all(Radius.circular(20))
+              // ),
               child: Row(
                 children: [
                   ElevatedButton(
