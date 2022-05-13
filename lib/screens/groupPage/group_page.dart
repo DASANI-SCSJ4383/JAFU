@@ -28,38 +28,40 @@ class _GroupPageState extends State<GroupPage> {
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: ()async{
-        if(page == 1){
-          final timegap = DateTime.now().difference(prebackpress);
-
-          final cantExit = timegap >= Duration(seconds: 2);
-
-          prebackpress = DateTime.now();
-
-          if (cantExit) {
-            final snack = SnackBar(
-              content: Text('Press Back button again to Exit'),
-              duration: Duration(seconds: 2),
-            );
-
-            ScaffoldMessenger.of(context).showSnackBar(snack);
-
+    return SafeArea(
+      child: WillPopScope(
+        onWillPop: ()async{
+          if(page == 1){
+            final timegap = DateTime.now().difference(prebackpress);
+    
+            final cantExit = timegap >= Duration(seconds: 2);
+    
+            prebackpress = DateTime.now();
+    
+            if (cantExit) {
+              final snack = SnackBar(
+                content: Text('Press Back button again to Exit'),
+                duration: Duration(seconds: 2),
+              );
+    
+              ScaffoldMessenger.of(context).showSnackBar(snack);
+    
+              return false;
+            } else {
+              SystemNavigator.pop();
+              return true;
+            }
+          }else{
+            setState(() {
+              page = 1;
+              bodyWidget = bodyFirst();
+            });
             return false;
-          } else {
-            SystemNavigator.pop();
-            return true;
           }
-        }else{
-          setState(() {
-            page = 1;
-            bodyWidget = bodyFirst();
-          });
-          return false;
-        }
-      },
-      child: Scaffold(
-        body: bodyWidget,
+        },
+        child: Scaffold(
+          body: bodyWidget,
+        ),
       ),
     );
   }
@@ -327,6 +329,7 @@ class _GroupPageState extends State<GroupPage> {
   return ListView.builder(
       itemCount: 10,
       itemBuilder: (context, index) => Card(
+      margin: const EdgeInsets.all(10),
       child: Container(
         height: 350.0,
         child: Column(
@@ -338,6 +341,7 @@ class _GroupPageState extends State<GroupPage> {
             ),
             Expanded(
               child: Container(
+                margin: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
                   image: DecorationImage(
                     image: NetworkImage("https://picsum.photos/250?image=9"),

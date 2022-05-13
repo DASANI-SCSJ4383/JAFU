@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:jafu/screens/createGroupPage/create_group_page.dart';
 import 'package:jafu/screens/facerecognition/menu.dart';
 import 'package:jafu/screens/initialpage/initial.dart';
 import 'package:jafu/screens/loginPage/login_page.dart';
@@ -32,6 +33,9 @@ Route<dynamic> createRoute(settings) {
 
     case '/facerecognition':
       return Menu.route(userviewmodel: settings.arguments as UserViewmodel);
+    
+    case '/createGroup':
+      return CreateGroupPage.route(userviewmodel: settings.arguments as UserViewmodel);
 
   }
   return null;

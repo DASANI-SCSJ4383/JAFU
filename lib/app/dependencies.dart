@@ -1,6 +1,8 @@
 import 'package:get_it/get_it.dart';
 import 'package:jafu/services/auth/auth_service.dart';
 import 'package:jafu/services/auth/auth_service_rest.dart';
+import 'package:jafu/services/groupmanagement/group_service.dart';
+import 'package:jafu/services/groupmanagement/group_service_rest.dart';
 import 'package:jafu/services/register/reg_service.dart';
 import 'package:jafu/services/register/reg_service_rest.dart';
 import 'package:jafu/viewmodel/user_viewmodel.dart';
@@ -16,6 +18,10 @@ void init() {
   
   dependency.registerLazySingleton<RegService>(
     () => RegServiceRest(baseUrl: url),
+  );
+
+  dependency.registerLazySingleton<GroupService>(
+    () => GroupServiceRest(baseUrl: url),
   );
 
   // Viewmodels
