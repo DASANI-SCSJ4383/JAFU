@@ -1,4 +1,7 @@
+import 'dart:convert';
+
 import 'package:flutter/foundation.dart';
+import 'package:jafu/models/group.dart';
 import 'package:jafu/services/groupmanagement/group_service.dart';
 import 'package:http/http.dart' as http;
 import 'package:retry/retry.dart';
@@ -43,6 +46,25 @@ class GroupServiceRest implements GroupService {
     }catch(e){
       return "Network Problem";
     }
+  }
+
+  @override
+  Future<List<Group>> getGroup(String userID) async {
+
+    var url = _baseUrl + "getMyGroup/$userID";
+    final r = RetryOptions(maxAttempts: 6);
+    try{
+      var result = await r.retry(() => http.get(Uri.parse(url)));
+      String response = result.body;
+      if (response == "false"){
+        return null;
+      }else{
+        final List listJson = jsonDecode(result.body);
+        return listJson.map((json) => Group.fromJson(json)).toList();
+      } 
+    }catch(e){
+      return null;
+    }  
   }
 
 }
