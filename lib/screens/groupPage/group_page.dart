@@ -358,23 +358,23 @@ class _GroupPageState extends State<GroupPage> {
               children: [
                 Row(
                   children: const [
-                    Icon(Icons.thumb_up,color: Colors.grey,),
+                    Icon(Icons.comment_rounded,color: Colors.grey,),
                     SizedBox(width: 8),
-                    Text("asd"),
+                    Text("Comment"),
                   ],
                 ),
                 Row(
                   children: const [
-                    Icon(Icons.thumb_up,color: Colors.grey),
+                    Icon(Icons.shopping_cart_checkout,color: Colors.grey),
                     SizedBox(width: 8),
-                    Text("asd"),
+                    Text("Add to Cart"),
                   ],
                 ),
                 Row(
                   children: const [
-                    Icon(Icons.thumb_up,color: Colors.grey),
+                    Icon(Icons.chat_bubble,color: Colors.grey),
                     SizedBox(width: 8),
-                    Text("asd"),
+                    Text("Chat Now"),
                   ],
                 ),
               ],
