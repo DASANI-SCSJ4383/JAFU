@@ -10,6 +10,7 @@ import 'package:jafu/screens/registerPage/register_page.dart';
 import 'package:jafu/viewmodel/user_viewmodel.dart';
 
 import '../screens/searchPage/search_page.dart';
+import '../screens/searchResultpage/search_result_page.dart';
 
 Route<dynamic> createRoute(settings) {
   switch (settings.name) {
@@ -41,11 +42,14 @@ Route<dynamic> createRoute(settings) {
       return CreateGroupPage.route(userviewmodel: settings.arguments as UserViewmodel);
 
     case '/groupInfo':
-      return GroupInfoPage.route();
+      return GroupInfoPage.route(groupViewmodel: settings.arguments[0],userViewmodel: settings.arguments[1],index: settings.arguments[2]);
 
     case '/search':
       return Search.route(
           viewmodel: settings.arguments[0], search: settings.arguments[1]);
+
+    case '/resultsearch':
+      return SearchResult.route(searchViewmodel: settings.arguments[0],userViewmodel: settings.arguments[1], search: settings.arguments[2]);
 
   }
   return null;

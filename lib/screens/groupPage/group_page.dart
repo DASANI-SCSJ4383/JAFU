@@ -117,11 +117,11 @@ class _GroupPageState extends State<GroupPage> {
       String urlImg, String userName, String, message, String hour) {
     return InkWell(
       onTap: () {
-        // setState(() {
-        //   page = 2;
-        //   bodyWidget = secondBody();
-        // });
-        Navigator.pushNamed(context, "/groupInfo");
+        setState(() {
+          page = 2;
+          bodyWidget = secondBody();
+        });
+        // Navigator.pushNamed(context, "/groupInfo");
       },
       child: Padding(
         padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 4.0),

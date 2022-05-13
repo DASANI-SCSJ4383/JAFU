@@ -5,6 +5,8 @@ import 'package:jafu/services/groupmanagement/group_service.dart';
 import 'package:jafu/services/groupmanagement/group_service_rest.dart';
 import 'package:jafu/services/register/reg_service.dart';
 import 'package:jafu/services/register/reg_service_rest.dart';
+import 'package:jafu/services/search/search_service.dart';
+import 'package:jafu/services/search/search_service_rest.dart';
 import 'package:jafu/viewmodel/user_viewmodel.dart';
 
 GetIt dependency = GetIt.instance;
@@ -22,6 +24,10 @@ void init() {
 
   dependency.registerLazySingleton<GroupService>(
     () => GroupServiceRest(baseUrl: url),
+  );
+
+  dependency.registerLazySingleton<SearchService>(
+    () => SearchServiceRest(baseUrl: url),
   );
 
   // Viewmodels

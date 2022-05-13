@@ -196,7 +196,7 @@ class _CreateGroupPageState extends State<CreateGroupPage> {
                                           context: context,
                                           type: AlertType.success,
                                           title: "SUCCESS",
-                                          desc: "Your registration was successful.",
+                                          desc: "The group has been created.",
                                           buttons: [
                                             DialogButton(
                                               child: Text(

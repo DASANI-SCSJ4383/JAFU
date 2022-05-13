@@ -10,7 +10,7 @@ class Search extends StatelessWidget {
   final UserViewmodel _viewmodel;
   final String _search;
 
-  Search({viewmodel, search})
+  const Search({viewmodel, search})
       : _viewmodel = viewmodel,
         _search = search;
 

@@ -27,4 +27,22 @@ class GroupServiceRest implements GroupService {
     
   }
 
+  @override
+  Future<String> joinGroup(String userID, String groupID) async{
+    var url = _baseUrl + "/enrollGroup";
+    final r = RetryOptions(maxAttempts: 6);
+    try{
+      var result = await r.retry(() => http.post(Uri.parse(url), body: {
+        "userID": userID,
+        "groupID": groupID,
+      }));
+      String response = result.body;
+      print(response);
+      if (result == null || response == "false") return null;
+      return response;
+    }catch(e){
+      return "Network Problem";
+    }
+  }
+
 }
