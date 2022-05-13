@@ -38,6 +38,7 @@ void main() async{
         theme: ThemeData(
           scaffoldBackgroundColor: kBackgroundColor,
           primarySwatch: Colors.blue,
+          dividerColor: Colors.white,
           visualDensity: VisualDensity.adaptivePlatformDensity,
         ),
         // initialRoute: '/',

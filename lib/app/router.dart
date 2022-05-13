@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:jafu/screens/createGroupPage/create_group_page.dart';
 import 'package:jafu/screens/facerecognition/menu.dart';
+import 'package:jafu/screens/groupPage/group_info_page.dart';
 import 'package:jafu/screens/initialpage/initial.dart';
 import 'package:jafu/screens/loginPage/login_page.dart';
 import 'package:jafu/screens/phoneAuth/otp.dart';
 import 'package:jafu/screens/phoneAuth/phone_auth.dart';
 import 'package:jafu/screens/registerPage/register_page.dart';
 import 'package:jafu/viewmodel/user_viewmodel.dart';
+
+import '../screens/searchPage/search_page.dart';
 
 Route<dynamic> createRoute(settings) {
   switch (settings.name) {
@@ -36,6 +39,13 @@ Route<dynamic> createRoute(settings) {
     
     case '/createGroup':
       return CreateGroupPage.route(userviewmodel: settings.arguments as UserViewmodel);
+
+    case '/groupInfo':
+      return GroupInfoPage.route();
+
+    case '/search':
+      return Search.route(
+          viewmodel: settings.arguments[0], search: settings.arguments[1]);
 
   }
   return null;
