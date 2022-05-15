@@ -9,6 +9,7 @@ import 'package:jafu/screens/phoneAuth/phone_auth.dart';
 import 'package:jafu/screens/registerPage/register_page.dart';
 import 'package:jafu/viewmodel/user_viewmodel.dart';
 
+import '../screens/groupPage/in_group_page.dart';
 import '../screens/searchPage/search_page.dart';
 import '../screens/searchResultpage/search_result_page.dart';
 
@@ -50,6 +51,10 @@ Route<dynamic> createRoute(settings) {
 
     case '/resultsearch':
       return SearchResult.route(searchViewmodel: settings.arguments[0],userViewmodel: settings.arguments[1], search: settings.arguments[2]);
+
+    case '/inGroup':
+      return InGroupPage.route(
+          userViewmodel: settings.arguments[0], groupViewmodel: settings.arguments[1],index: settings.arguments[2]);
 
   }
   return null;
