@@ -55,21 +55,22 @@ class _AuthActionButtonState extends State<AuthActionButton> {
   Future _signIn(context) async {
     String password = _passwordTextEditingController.text;
 
-    if (this.predictedUser.password == password) {
-      Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (BuildContext context) => Homepage(widget._userviewmodel)));
-    } else {
-      showDialog(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-            content: Text('Wrong password!'),
-          );
-        },
-      );
-    }
+    // if (this.predictedUser.password == password) {
+    //   Navigator.push(
+    //       context,
+    //       MaterialPageRoute(
+    //           builder: (BuildContext context) => Homepage(widget._userviewmodel)));
+    // } else {
+    //   showDialog(
+    //     context: context,
+    //     builder: (context) {
+    //       return AlertDialog(
+    //         content: Text('Wrong password!'),
+    //       );
+    //     },
+    //   );
+    // }
+    Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => Homepage(widget._userviewmodel)));
   }
 
   String _predictUser() {

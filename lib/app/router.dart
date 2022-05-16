@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:jafu/screens/createGroupPage/create_group_page.dart';
 import 'package:jafu/screens/facerecognition/menu.dart';
+import 'package:jafu/screens/groupPage/add_post.dart';
+import 'package:jafu/screens/groupPage/cart_page.dart';
 import 'package:jafu/screens/groupPage/group_info_page.dart';
 import 'package:jafu/screens/initialpage/initial.dart';
 import 'package:jafu/screens/loginPage/login_page.dart';
@@ -55,6 +57,13 @@ Route<dynamic> createRoute(settings) {
     case '/inGroup':
       return InGroupPage.route(
           userViewmodel: settings.arguments[0], groupViewmodel: settings.arguments[1],index: settings.arguments[2]);
+
+    case '/cartPage':
+      return CartPage.route(
+          userViewmodel: settings.arguments[0], groupViewmodel: settings.arguments[1],index: settings.arguments[2]);
+    
+    case '/addPost':
+      return AddPost.route(userviewmodel: settings.arguments as UserViewmodel);
 
   }
   return null;
