@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
 import 'package:jafu/models/group.dart';
+import 'package:jafu/models/post.dart';
 import 'package:jafu/services/groupmanagement/group_service.dart';
 import 'package:http/http.dart' as http;
 import 'package:retry/retry.dart';
@@ -65,6 +66,19 @@ class GroupServiceRest implements GroupService {
     }catch(e){
       return null;
     }  
+  }
+
+  @override
+  Future<String> addItem(Post _post) async {
+    var url = "http://159.223.63.41/createPost.php";
+    var result = await http.post(Uri.parse(url), body: {
+      "title": _post.postTitle,
+      "price": _post.price,
+      "description": _post.description,
+    });
+    String response = result.body;
+    print(response);
+    return response;
   }
 
 }

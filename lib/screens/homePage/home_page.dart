@@ -4,6 +4,7 @@ import 'package:jafu/screens/groupPage/group_page.dart';
 import 'package:jafu/screens/myOrderPage/my_order_page.dart';
 import 'package:jafu/screens/profilePage/profile_page.dart';
 import 'package:jafu/viewmodel/user_viewmodel.dart';
+import 'package:stream_chat_flutter/stream_chat_flutter.dart' as chat;
 
 class Homepage extends StatefulWidget {
 
@@ -90,10 +91,23 @@ class _HomepageState extends State<Homepage> {
                 icon: Icon(Icons.chat),
                 iconSize: 30.0,
                 color: Colors.white,
-                onPressed: () {
-                  myState(() {
-                    page = 2;
-                  });
+                onPressed: () async{
+                  
+                  String id = widget._userviewmodel.user.userID;
+                  final client = chat.StreamChatCore.of(context).client;
+                  await client.disconnectUser();
+                  await client.connectUser(
+                    chat.User(
+                      id: id,
+                      extraData: {
+                        'name': widget._userviewmodel.user.username,
+                      },
+                    ),
+                    client.devToken(id).rawValue,
+                  );
+                  if(client!=null){
+                    Navigator.pushNamed(context, '/chat');
+                  }
                 },
               ),
             ],

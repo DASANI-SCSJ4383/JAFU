@@ -8,7 +8,6 @@ import 'package:jafu/screens/facerecognition/auth_action_button.dart';
 import 'package:jafu/screens/facerecognition/cameraheader.dart';
 import 'package:jafu/screens/facerecognition/facepainter.dart';
 import 'dart:math' as math;
-
 import 'package:jafu/services/facerecognition/camera.service.dart';
 import 'package:jafu/services/facerecognition/facenet.service.dart';
 import 'package:jafu/services/facerecognition/ml_kit_service.dart';

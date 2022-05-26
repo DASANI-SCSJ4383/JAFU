@@ -65,6 +65,8 @@ dependencies:
   flutter_slidable: ^0.6.0
   image_picker: ^0.8.5+3
   image_cropper: ^1.4.1
+  stream_chat_flutter: ^3.3.2
+  logger: ^1.1.0
   camera:
     git:
       url: https://github.com/flutter/plugins

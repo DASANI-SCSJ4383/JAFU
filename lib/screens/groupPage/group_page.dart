@@ -7,6 +7,7 @@ import 'package:jafu/viewmodel/group_viewmodel.dart';
 import 'package:jafu/viewmodel/user_viewmodel.dart';
 
 import '../../models/group.dart';
+import '../homePage/home_page.dart';
 
 class GroupPage extends StatefulWidget {
 

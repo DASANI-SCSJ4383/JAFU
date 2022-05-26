@@ -142,9 +142,9 @@ class _BodyState extends State<Body> {
                             ).show();
                           }else if(a == "valid"){
                             Navigator.pop(context);
-                            // Navigator.pushNamed(context, '/otp',arguments: fullNoTel);
-                            RegisterViewModel registerViewModel = RegisterViewModel();
-                            Navigator.pushNamed(context, '/register',arguments: [fullNoTel,registerViewModel]);
+                            Navigator.pushNamed(context, '/otp',arguments: fullNoTel);
+                            // RegisterViewModel registerViewModel = RegisterViewModel();
+                            // Navigator.pushNamed(context, '/register',arguments: [fullNoTel,registerViewModel]);
                             phoneNum.clear();
                           }else{
                             Navigator.pop(context);

@@ -2,6 +2,8 @@ import 'package:jafu/app/dependencies.dart';
 import 'package:jafu/services/groupmanagement/group_service.dart';
 import 'package:jafu/viewmodel/viewmodel.dart';
 
+import '../models/post.dart';
+
 class GroupViewmodel extends Viewmodel {
 
   GroupService get groupService => dependency();
@@ -27,6 +29,11 @@ class GroupViewmodel extends Viewmodel {
 
   Future<void> getGroup(String userID) async {
     _group = await groupService.getGroup(userID);
+  }
+
+  Future<String> createPost(Post _post) async {
+    String result = await groupService.addItem(_post);
+    return result;
   }
 
 }

@@ -1,22 +1,25 @@
 import 'dart:io';
-import 'package:camera/camera.dart';
+import 'package:cool_alert/cool_alert.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:jafu/models/post.dart';
 import 'package:jafu/screens/widgets/constants.dart';
-import 'package:jafu/services/facerecognition/database.dart';
-import 'package:jafu/services/facerecognition/ml_kit_service.dart';
+import 'package:jafu/viewmodel/group_viewmodel.dart';
 import 'package:jafu/viewmodel/user_viewmodel.dart';
-import '../../services/facerecognition/facenet.service.dart';
-import '../facerecognition/signin.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
+import 'package:http/http.dart' as http;
 
 class AddPost extends StatefulWidget {
-  static Route route({userviewmodel}) =>
-      MaterialPageRoute(builder: (context) => AddPost(userviewmodel: userviewmodel));
+  static Route route({userviewmodel,groupViewmodel,index}) =>
+      MaterialPageRoute(builder: (context) => AddPost(userviewmodel: userviewmodel,groupViewmodel: groupViewmodel,index: index));
 
   final UserViewmodel _userviewmodel;
+  final GroupViewmodel _groupViewmodel;
+  final int _index;
 
-  const AddPost({userviewmodel}) : _userviewmodel = userviewmodel;
+  const AddPost({userviewmodel,groupViewmodel,index}) : _userviewmodel = userviewmodel,_groupViewmodel = groupViewmodel,_index = index;
 
   @override
   State<AddPost> createState() => _AddPostState();
@@ -24,56 +27,35 @@ class AddPost extends StatefulWidget {
 
 class _AddPostState extends State<AddPost> {
 
-  final FaceNetService _faceNetService = FaceNetService();
-  final MLKitService _mlKitService = MLKitService();
-  final DataBaseService _dataBaseService = DataBaseService();
-
-  CameraDescription cameraDescription;
-  bool loading = false;
-
-  final ImagePicker _picker = ImagePicker();
   final name = TextEditingController();
   final price = TextEditingController();
+  final detail = TextEditingController();
   int mode = 0;
-  final List<XFile> _imageList = [];
+  final List<File> _imageList = List.filled(3, null);
+  int bil = 0;
 
-  void selectImage()async{
-    final XFile selectedImage = await _picker.pickImage(source: ImageSource.camera);
-    if(selectedImage!=null){
-      _imageList.add(selectedImage);
-    }
+  void selectImage(index)async{
+    final image = await ImagePicker().pickImage(source: ImageSource.camera);
+    final imageTemporary = File(image.path);
+    _imageList[index] = imageTemporary;
+    // final XFile selectedImage = await _picker.pickImage(source: ImageSource.camera);
+    // if(selectedImage!=null){
+    //   _imageList.add(selectedImage);
+    // }
   }
 
-  @override
-  void initState() {
-    super.initState();
-    _startUp();
-  }
+  AndroidUiSettings androidUiSettingsLocked() => AndroidUiSettings(
+        toolbarTitle: 'Potong Gambar',
+        toolbarColor: Colors.grey[300],
+        toolbarWidgetColor: Colors.blue,
+        hideBottomControls: true,
+        //lockAspectRatio: false
+      );
 
-  _startUp() async {
-    _setLoading(true);
-
-    List<CameraDescription> cameras = await availableCameras();
-
-    /// takes the front camera
-    cameraDescription = cameras.firstWhere(
-      (CameraDescription camera) =>
-          camera.lensDirection == CameraLensDirection.front,
-    );
-
-    // start the services
-    await _faceNetService.loadModel();
-    await _dataBaseService.loadDB(widget._userviewmodel);
-    _mlKitService.initialize();
-
-    _setLoading(false);
-  }
-
-  _setLoading(bool value) {
-    setState(() {
-      loading = value;
-    });
-  }
+  IOSUiSettings iosUiSettingsLocked() => IOSUiSettings(
+        rotateClockwiseButtonHidden: false,
+        rotateButtonsHidden: false,
+      );
 
   @override
   Widget build(BuildContext context) {
@@ -105,16 +87,55 @@ class _AddPostState extends State<AddPost> {
               icon: Icon(Icons.check_outlined),
               iconSize: 30.0,
               color: Colors.white,
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (BuildContext context) => SignIn(
-                      widget._userviewmodel,
-                      cameraDescription: cameraDescription,
-                    ),
-                  ),
-                );
+              onPressed: () async{
+                if(_imageList.length == 0){
+                  Alert(
+                    context: context,
+                    type: AlertType.warning,
+                    title: "INVALID",
+                    desc: "Please add atleast one picture.",
+                    buttons: [
+                      DialogButton(
+                        child: Text(
+                          "OK",
+                          style: TextStyle(color: Colors.white, fontSize: 20),
+                        ),
+                        onPressed: () => Navigator.pop(context),
+                        width: 120,
+                      )
+                    ],
+                  ).show();
+                }else{
+                  GroupViewmodel _groupViewmodel = GroupViewmodel();
+
+                  Post newPost = Post();
+                  newPost.postTitle = name.text;
+                  newPost.price = price.text;
+                  newPost.description = detail.text;
+
+                  CoolAlert.show(
+                    context: context,
+                    type: CoolAlertType.loading
+                  );
+
+                  String postID = await _groupViewmodel.createPost(newPost);
+                  if(postID != null){
+                    for(int i=0;i<3;i++){
+                       var uri = Uri.parse("http://159.223.63.41/uploadImage.php?id=" + postID + "&index=" + i.toString());
+                       var request = http.MultipartRequest("POST", uri);
+                       if (_imageList[i] != null) {
+                         print(_imageList[i].path);
+                        var pic = await http.MultipartFile.fromPath("image", _imageList[i].path);
+                        request.files.add(pic);
+                      }
+                      await request.send();
+                    }
+                    Navigator.pop(context);
+                    Navigator.pushNamed(context, "/inGroup", arguments: [widget._userviewmodel,widget._groupViewmodel,widget._index]);
+                  }else{
+                    Navigator.pop(context);
+                  }
+                }
               },
             ):
             Container()
@@ -133,7 +154,7 @@ class _AddPostState extends State<AddPost> {
                   style: kBodyText.copyWith(color: Colors.black,fontSize: 20),
                   decoration: InputDecoration(
                     hintText: "Title/Item Name*",
-                    labelText: "Title/Item Name",
+                    labelText: "Title/Item Name*",
                     hintStyle: kBodyText,
                     fillColor: Colors.black,
                     focusedBorder: OutlineInputBorder(
@@ -158,7 +179,7 @@ class _AddPostState extends State<AddPost> {
                   decoration: InputDecoration(
                     prefixText: "RM ",
                     hintText: "Price*",
-                    labelText: "Price",
+                    labelText: "Price*",
                     hintStyle: kBodyText,
                     fillColor: Colors.black,
                     focusedBorder: OutlineInputBorder(
@@ -181,12 +202,12 @@ class _AddPostState extends State<AddPost> {
                 ),
                 SizedBox(height: 20,),
                 TextFormField(
-                  controller: name,
+                  controller: detail,
                   maxLines: 5,
                   style: kBodyText.copyWith(color: Colors.black,fontSize: 20),
                   decoration: InputDecoration(
                     hintText: "Details*",
-                    labelText: "Details",
+                    labelText: "Details*",
                     hintStyle: kBodyText,
                     fillColor: Colors.black,
                     focusedBorder: OutlineInputBorder(
@@ -207,9 +228,28 @@ class _AddPostState extends State<AddPost> {
                 SizedBox(height: 70,),
                 ElevatedButton(
                   onPressed: (){
-                    myState(() {
-                      mode = 1;
-                    });
+                    if(name.text.isEmpty||price.text.isEmpty||detail.text.isEmpty){
+                      Alert(
+                        context: context,
+                        type: AlertType.warning,
+                        title: "INVALID",
+                        desc: "Please fill in all the textfields.",
+                        buttons: [
+                          DialogButton(
+                            child: Text(
+                              "OK",
+                              style: TextStyle(color: Colors.white, fontSize: 20),
+                            ),
+                            onPressed: () => Navigator.pop(context),
+                            width: 120,
+                          )
+                        ],
+                      ).show();
+                    }else{
+                      myState(() {
+                        mode = 1;
+                      });
+                    }
                   },
                   child: Text("Next"),
                 )
@@ -220,34 +260,75 @@ class _AddPostState extends State<AddPost> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text("You can add pictures up to 6 only",style: TextStyle(color: Colors.red,fontWeight: FontWeight.bold),),
+                Text("You can add pictures up to 3 only",style: TextStyle(color: Colors.red,fontWeight: FontWeight.bold),),
                 SizedBox(height: 15,),
                 GridView.builder(
                   shrinkWrap: true,
                   gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2,mainAxisSpacing: 10,crossAxisSpacing: 10), 
                   itemCount: _imageList.length,
                   itemBuilder: (BuildContext ctx,index){
-                    return Container(
+                    return _imageList[index] != null?
+                    Container(
                       decoration: BoxDecoration(
                         border: Border.all(color: Colors.black)
                       ),
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: Image.file(File(_imageList[index].path)),
+                        // child: Image.file(
+                        //   file[index],
+                        //   alignment: Alignment.center,
+                        //   fit: BoxFit.contain,
+                        // ),
                       )
-                    );
+                    ):Container();
                   }
                 ),
                 SizedBox(height: 25,),
                 ElevatedButton(
                   onPressed: ()async{
-                    final XFile selectedImage = await _picker.pickImage(source: ImageSource.camera);
-                    if(selectedImage!=null){
-                      _imageList.add(selectedImage);
+                    if(bil == 3){
+                      Alert(
+                        context: context,
+                        type: AlertType.warning,
+                        title: "INVALID",
+                        desc: "Only 3 pictures allow",
+                        buttons: [
+                          DialogButton(
+                            child: Text(
+                              "OK",
+                              style: TextStyle(color: Colors.white, fontSize: 20),
+                            ),
+                            onPressed: () => Navigator.pop(context),
+                            width: 120,
+                          )
+                        ],
+                      ).show();
+                    }else{
+                      // final XFile selectedImage = await _picker.pickImage(source: ImageSource.camera);
+                      // if(selectedImage!=null){
+                      //   // _imageList.add(selectedImage);
+                      //   _imageList[bil] = selectedImage;
+                      //   bil++;
+                      // }
+                      final image = await ImagePicker().pickImage(source: ImageSource.camera);
+                      File croppedImage = await ImageCropper().cropImage(
+                        sourcePath: image.path,
+                        aspectRatio: CropAspectRatio(ratioX: 1, ratioY: 1),
+                        aspectRatioPresets: [CropAspectRatioPreset.square],
+                        compressQuality: 70,
+                        compressFormat: ImageCompressFormat.jpg,
+                        androidUiSettings: androidUiSettingsLocked(),
+                        iosUiSettings: iosUiSettingsLocked(),
+                        // maxWidth: 1080,
+                        // maxHeight: 1080,
+                      );
+                      if (croppedImage != null) {
+                        _imageList[bil] = croppedImage;
+                        myState(() {});
+                      }
+                      bil++;
                     }
-                    myState(() {
-                      
-                    });
                   },
                   child: Text("Pick Image"),
                 ),

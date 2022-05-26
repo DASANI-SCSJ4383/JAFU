@@ -10,6 +10,7 @@ import 'package:jafu/screens/widgets/constants.dart';
 import 'package:jafu/screens/widgets/my_text_button.dart';
 import 'package:jafu/viewmodel/login_viewmodel.dart';
 import 'package:jafu/viewmodel/user_viewmodel.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sizer/sizer.dart';
 
@@ -193,63 +194,102 @@ class _SignInPageState extends State<LoginPage> {
                                   ),
                                   onChanged: (text) => setState(() => password.text),
                                 ),
+                                SizedBox(
+                                  height: 20,
+                                ),
+                                MyTextButton(
+                                  buttonName: 'Sign In',
+                                  onTap: ()async {
+                                    if(phoneNum.text.isEmpty || password.text.isEmpty){
+                                      Alert(
+                                          context: context,
+                                          type: AlertType.warning,
+                                          title: "INVALID",
+                                          desc: "Please input the login info.",
+                                          buttons: [
+                                            DialogButton(
+                                              child: Text(
+                                                "OK",
+                                                style: TextStyle(color: Colors.white, fontSize: 20),
+                                              ),
+                                              onPressed: () => Navigator.pop(context),
+                                              width: 120,
+                                            )
+                                          ],
+                                        ).show();
+                                    }else{
+                                      CoolAlert.show(
+                                        context: context,
+                                        type: CoolAlertType.loading
+                                      );
+                                      String fullNoTel = "+60" + phoneNum.text;
+                                      User a = await _viewmodel.authenticate(fullNoTel,password.text);
+                                      if(a == null){
+                                        Navigator.pop(context);
+                                        Alert(
+                                          context: context,
+                                          type: AlertType.warning,
+                                          title: "INVALID",
+                                          desc: "Phone number or Password is wrong.",
+                                          buttons: [
+                                            DialogButton(
+                                              child: Text(
+                                                "OK",
+                                                style: TextStyle(color: Colors.white, fontSize: 20),
+                                              ),
+                                              onPressed: () => Navigator.pop(context),
+                                              width: 120,
+                                            )
+                                          ],
+                                        ).show();
+                                      }else{
+                                        UserViewmodel _userviewmodel = UserViewmodel();
+                                        _userviewmodel.user = a;
+                                        // await _viewmodel.updateUserToken(getToken());
+                                        Navigator.pop(context);
+                                        SharedPreferences preferences = await SharedPreferences.getInstance();
+                                        preferences.setString('user', jsonEncode(a));
+                                        // Navigator.popAndPushNamed(context, '/homepage',arguments: _userviewmodel);
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(builder: (context) =>  Homepage(_userviewmodel)),
+                                        );
+                                      }
+                                    }
+                                  },
+                                  bgColor: Colors.white,
+                                  textColor: Colors.black87,
+                                ),
+                                SizedBox(
+                                  height: 20,
+                                ),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      "Dont't have an account? ",
+                                      style: kBodyText,
+                                    ),
+                                    GestureDetector(
+                                      onTap: () {
+                                        Navigator.pushNamed(context, '/phoneAuth');
+                                      },
+                                      child: Text(
+                                        'Register',
+                                        style: kBodyText.copyWith(
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                    )
+                                  ],
+                                ),
+                                SizedBox(
+                                  height: 10,
+                                ),
                               ],
                             ),
                           ),
-                          MyTextButton(
-                            buttonName: 'Sign In',
-                            onTap: ()async {
-                              CoolAlert.show(
-                                context: context,
-                                type: CoolAlertType.loading
-                              );
-                              String fullNoTel = "+60" + phoneNum.text;
-                              User a = await _viewmodel.authenticate(fullNoTel,password.text);
-                              if(a == null){
-                                Navigator.pop(context);
-                              }else{
-                                UserViewmodel _userviewmodel = UserViewmodel();
-                                _userviewmodel.user = a;
-                                // await _viewmodel.updateUserToken(getToken());
-                                Navigator.pop(context);
-                                SharedPreferences preferences = await SharedPreferences.getInstance();
-                                preferences.setString('user', jsonEncode(a));
-                                // Navigator.popAndPushNamed(context, '/homepage',arguments: _userviewmodel);
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(builder: (context) =>  Homepage(_userviewmodel)),
-                                );
-                              }
-                            },
-                            bgColor: Colors.white,
-                            textColor: Colors.black87,
-                          ),
-                          SizedBox(
-                            height: 20,
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                "Dont't have an account? ",
-                                style: kBodyText,
-                              ),
-                              GestureDetector(
-                                onTap: () {
-                                  Navigator.pushNamed(context, '/phoneAuth');
-                                },
-                                child: Text(
-                                  'Register',
-                                  style: kBodyText.copyWith(
-                                    color: Colors.white,
-                                  ),
-                                ),
-                              )
-                            ],
-                          ),
-                          SizedBox(
-                            height: 10,
-                          ),
+                          
                         ],
                       ),
                     ),

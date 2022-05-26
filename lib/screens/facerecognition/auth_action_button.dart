@@ -10,6 +10,7 @@ import 'package:jafu/services/facerecognition/camera.service.dart';
 import 'package:jafu/services/facerecognition/database.dart';
 import 'package:jafu/services/facerecognition/facenet.service.dart';
 import 'package:jafu/viewmodel/user_viewmodel.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
 
 class AuthActionButton extends StatefulWidget {
   AuthActionButton(this._userviewmodel,this._initializeControllerFuture,
@@ -55,22 +56,46 @@ class _AuthActionButtonState extends State<AuthActionButton> {
   Future _signIn(context) async {
     String password = _passwordTextEditingController.text;
 
-    // if (this.predictedUser.password == password) {
-    //   Navigator.push(
-    //       context,
-    //       MaterialPageRoute(
-    //           builder: (BuildContext context) => Homepage(widget._userviewmodel)));
-    // } else {
-    //   showDialog(
-    //     context: context,
-    //     builder: (context) {
-    //       return AlertDialog(
-    //         content: Text('Wrong password!'),
-    //       );
-    //     },
-    //   );
-    // }
-    Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => Homepage(widget._userviewmodel)));
+    if (this.predictedUser.password == password) {
+      // Navigator.push(
+      //     context,
+      //     MaterialPageRoute(
+      //         builder: (BuildContext context) => Homepage(widget._userviewmodel)));
+      Navigator.pop(context,null);
+      Navigator.pop(context,"approved");
+    } else {
+      // showDialog(
+      //   context: context,
+      //   builder: (context) {
+      //     return AlertDialog(
+      //       content: Text('Wrong password!'),
+      //     );
+      //   },
+      // );
+      Alert(
+        context: context,
+        type: AlertType.warning,
+        title: "INVALID",
+        desc: "Face not recognized.",
+        buttons: [
+          DialogButton(
+            child: Text(
+              "OK",
+              style: TextStyle(color: Colors.white, fontSize: 20),
+            ),
+            onPressed: () {
+              Navigator.pop(context,null);
+              Navigator.pop(context,null);
+            },
+            width: 120,
+          )
+        ],
+      ).show();
+    }
+    Navigator.pop(context,null);
+    Navigator.pop(context,null);
+    // print("ooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo");
+    // Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => Homepage(widget._userviewmodel)));
   }
 
   String _predictUser() {
