@@ -69,16 +69,35 @@ class GroupServiceRest implements GroupService {
   }
 
   @override
-  Future<String> addItem(Post _post) async {
+  Future<String> addItem(Post _post,String groupID,String userID) async {
     var url = "http://159.223.63.41/createPost.php";
     var result = await http.post(Uri.parse(url), body: {
+      "groupID": groupID,
+      "userID": userID,
       "title": _post.postTitle,
       "price": _post.price,
       "description": _post.description,
     });
     String response = result.body;
-    print(response);
     return response;
+  }
+
+  @override
+  Future<List<Post>> getGroupPost(String groupID) async {
+    var url = _baseUrl + "getPost/" + groupID;
+    var result = await http.get(Uri.parse(url));
+    if (result == null) return null;
+    final List listJson = jsonDecode(result.body);
+    return listJson.map((json) => Post.fromJson(json)).toList();
+  }
+
+  @override
+  Future<List<Post>> getMyPost(String groupID,String userID) async {
+    var url = _baseUrl + "getMyPost/" + groupID + "/" + userID;
+    var result = await http.get(Uri.parse(url));
+    if (result == null) return null;
+    final List listJson = jsonDecode(result.body);
+    return listJson.map((json) => Post.fromJson(json)).toList();
   }
 
 }

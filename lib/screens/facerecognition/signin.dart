@@ -5,6 +5,7 @@ import 'package:camera/camera.dart';
 import 'package:google_ml_kit/google_ml_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:jafu/screens/facerecognition/auth_action_button.dart';
+import 'package:jafu/screens/facerecognition/auth_action_button_signIn.dart';
 import 'package:jafu/screens/facerecognition/cameraheader.dart';
 import 'package:jafu/screens/facerecognition/facepainter.dart';
 import 'dart:math' as math;
@@ -13,11 +14,15 @@ import 'package:jafu/services/facerecognition/facenet.service.dart';
 import 'package:jafu/services/facerecognition/ml_kit_service.dart';
 import 'package:jafu/viewmodel/user_viewmodel.dart';
 
+import '../../viewmodel/group_viewmodel.dart';
+
 class SignIn extends StatefulWidget {
   final CameraDescription cameraDescription;
   final UserViewmodel _userViewmodel;
+  final GroupViewmodel _groupViewmodel;
+  final int _index;
 
-  const SignIn(this._userViewmodel,{
+  const SignIn(this._userViewmodel,this._groupViewmodel,this._index,{
     Key key,
     @required this.cameraDescription,
   }) : super(key: key);
@@ -227,8 +232,10 @@ class SignInState extends State<SignIn> {
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: !_bottomSheetVisible
-          ? AuthActionButton(
+          ? AuthActionSignIn(
               widget._userViewmodel,
+              widget._groupViewmodel,
+              widget._index,
               _initializeControllerFuture,
               onPressed: onShot,
               isLogin: true,

@@ -6,6 +6,7 @@ import 'package:jafu/screens/facerecognition/signup.dart';
 import 'package:jafu/services/facerecognition/database.dart';
 import 'package:jafu/services/facerecognition/facenet.service.dart';
 import 'package:jafu/services/facerecognition/ml_kit_service.dart';
+import 'package:jafu/viewmodel/group_viewmodel.dart';
 import 'package:jafu/viewmodel/user_viewmodel.dart';
 
 class Menu extends StatefulWidget {
@@ -139,11 +140,15 @@ class _MenuState extends State<Menu> {
                       children: [
                         InkWell(
                           onTap: () {
+                            GroupViewmodel _groupViewmodel = GroupViewmodel();
+                            int index = 0;
                             Navigator.push(
                               context,
                               MaterialPageRoute(
                                 builder: (BuildContext context) => SignIn(
                                   widget._userviewmodel,
+                                  _groupViewmodel,
+                                  index,
                                   cameraDescription: cameraDescription,
                                 ),
                               ),
