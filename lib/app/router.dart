@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:jafu/models/post.dart';
 import 'package:jafu/screens/createGroupPage/create_group_page.dart';
 import 'package:jafu/screens/facerecognition/menu.dart';
 import 'package:jafu/screens/groupPage/add_post.dart';
@@ -6,6 +7,7 @@ import 'package:jafu/screens/groupPage/cart_page.dart';
 import 'package:jafu/screens/groupPage/group_info_page.dart';
 import 'package:jafu/screens/groupPage/manage_post.dart';
 import 'package:jafu/screens/groupPage/review_post.dart';
+import 'package:jafu/screens/groupPage/test.dart';
 import 'package:jafu/screens/initialpage/initial.dart';
 import 'package:jafu/screens/loginPage/login_page.dart';
 import 'package:jafu/screens/phoneAuth/otp.dart';
@@ -14,7 +16,9 @@ import 'package:jafu/screens/registerPage/register_page.dart';
 import 'package:jafu/viewmodel/user_viewmodel.dart';
 
 import '../screens/chatPage/channelListPage.dart';
+import '../screens/groupPage/edit_post.dart';
 import '../screens/groupPage/in_group_page.dart';
+import '../screens/groupPage/view_picture.dart';
 import '../screens/searchPage/search_page.dart';
 import '../screens/searchResultpage/search_result_page.dart';
 
@@ -71,8 +75,17 @@ Route<dynamic> createRoute(settings) {
     case '/managePost':
       return ManagePost.route(userviewmodel: settings.arguments[0],groupViewmodel: settings.arguments[1],index: settings.arguments[2]);
 
+    case '/editPost':
+      return EditPost.route(userviewmodel: settings.arguments[0],groupViewmodel: settings.arguments[1],index: settings.arguments[2]);
+
     case '/chat':
       return ChannelListPage.route();
+
+    case '/test':
+      return Test.route();
+
+    case "/zoompicture":
+      return ZoomPicture.route(post: settings.arguments as Post);
 
     case '/reviewPost':
       return ReviewPost.route(

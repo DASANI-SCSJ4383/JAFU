@@ -3,7 +3,7 @@ class Post{
   String _postID;
   String _groupID;
   String _userID;
-  String _postTitle;
+  String _title;
   String _price;
   String _description;
   String _pic1;
@@ -12,6 +12,7 @@ class Post{
   String _date;
   String _username;
   String _phoneNum;
+  int _activeIndex = 0;
   final List _picture = [];
 
   get postID => _postID;
@@ -23,8 +24,8 @@ class Post{
   get userID => _userID;
   set userID(value) => _userID = value;
 
-  get postTitle => _postTitle;
-  set postTitle(value) => _postTitle = value;
+  get title => _title;
+  set title(value) => _title = value;
 
   get price => _price;
   set price(value) => _price = value;
@@ -50,6 +51,9 @@ class Post{
   get phoneNum => _phoneNum;
   set phoneNum(value) => _phoneNum = value;
 
+  get activeIndex => _activeIndex;
+  set activeIndex(value) => _activeIndex = value;
+
   get picture => _picture;
   set picture(value) {
     _picture.add(value);
@@ -60,7 +64,7 @@ class Post{
         dynamic postID,
         String groupID = '',
         String userID = '',
-        String postTitle = '',
+        String title = '',
         String price = '',
         String description = '',
         String pic1 = '',
@@ -73,7 +77,7 @@ class Post{
   ) : _postID = postID,
       _groupID = groupID,
       _userID = userID,
-      _postTitle = postTitle,
+      _title = title,
       _price = price,
       _description = description,
       _pic1 = pic1,
@@ -88,7 +92,7 @@ class Post{
             postID: from.postID,
             groupID: from.groupID,
             userID: from.userID,
-            postTitle: from.postTitle,
+            title: from.title,
             price: from.price,
             description: from.description,
             pic1: from.pic1,
@@ -104,7 +108,7 @@ class Post{
           postID: json['postID'],
           groupID: json['groupID'],
           userID: json['userID'],
-          postTitle: json['postTitle'],
+          title: json['title'],
           price: json['price'],
           description: json['description'],
           pic1: json['pic1'],
@@ -119,7 +123,7 @@ class Post{
         'postID': postID,
         'groupID': groupID,
         'userID': userID,
-        'postTitle': postTitle,
+        'title': title,
         'price': price,
         'description': description,
         'pic1': pic1,

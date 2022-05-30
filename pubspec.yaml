@@ -67,6 +67,7 @@ dependencies:
   image_cropper: ^1.4.1
   stream_chat_flutter: ^3.3.2
   logger: ^1.1.0
+  expandable_text: ^2.3.0
   camera:
     git:
       url: https://github.com/flutter/plugins
@@ -83,6 +84,12 @@ dev_dependencies:
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^1.0.0
+
+dependency_overrides:
+  photo_view:
+    git:
+      url: https://github.com/bluefireteam/photo_view
+      ref: master
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

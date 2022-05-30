@@ -1,11 +1,12 @@
 import 'dart:convert';
-
 import 'package:flutter/foundation.dart';
-import 'package:jafu/models/group.dart';
-import 'package:jafu/models/post.dart';
 import 'package:jafu/services/groupmanagement/group_service.dart';
 import 'package:http/http.dart' as http;
 import 'package:retry/retry.dart';
+
+import '../../models/cart.dart';
+import '../../models/group.dart';
+import '../../models/post.dart';
 
 class GroupServiceRest implements GroupService {
 
@@ -41,7 +42,6 @@ class GroupServiceRest implements GroupService {
         "groupID": groupID,
       }));
       String response = result.body;
-      print(response);
       if (result == null || response == "false") return null;
       return response;
     }catch(e){
@@ -74,7 +74,7 @@ class GroupServiceRest implements GroupService {
     var result = await http.post(Uri.parse(url), body: {
       "groupID": groupID,
       "userID": userID,
-      "title": _post.postTitle,
+      "title": _post.title,
       "price": _post.price,
       "description": _post.description,
     });
@@ -98,6 +98,64 @@ class GroupServiceRest implements GroupService {
     if (result == null) return null;
     final List listJson = jsonDecode(result.body);
     return listJson.map((json) => Post.fromJson(json)).toList();
+  }
+
+  @override
+  Future<String> editPost(Post _post) async {
+
+    var url = _baseUrl + "editPost/" + _post.postID;
+    final r = RetryOptions(maxAttempts: 6);
+    try{
+      var result = await r.retry(() => http.put(Uri.parse(url), body: {
+        "title": _post.title,
+        "price": _post.price,
+        "description": _post.description,
+      }));
+      String response = result.body;
+      if (response == "false"){
+        return null;
+      }else{
+        return response;
+      } 
+    }catch(e){
+      return null;
+    }  
+  }
+
+  @override
+  Future<String> addToCart(String userID, String postID, String groupID) async{
+    var url = _baseUrl + "/addToCart";
+    final r = RetryOptions(maxAttempts: 6);
+    try{
+      var result = await r.retry(() => http.post(Uri.parse(url), body: {
+        "userID": userID,
+        "postID": postID,
+        "groupID": groupID,
+      }));
+      String response = result.body;
+      if (result == null || response == "false") return null;
+      return response;
+    }catch(e){
+      return "Network Problem";
+    }
+  }
+
+  @override
+  Future<List<Cart>> getCart(String groupID,String userID) async {
+    var url = _baseUrl + "getCart/$groupID/$userID";
+    final r = RetryOptions(maxAttempts: 6);
+    try{
+      var result = await r.retry(() => http.get(Uri.parse(url)));
+      String response = result.body;
+      if (response == "false"){
+        return null;
+      }else{
+        final List listJson = jsonDecode(result.body);
+        return listJson.map((json) => Cart.fromJson(json)).toList();
+      } 
+    }catch(e){
+      return null;
+    }  
   }
 
 }

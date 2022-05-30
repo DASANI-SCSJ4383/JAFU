@@ -4,10 +4,10 @@ import 'package:jafu/screens/groupPage/group_tab_bar1.dart';
 import 'package:jafu/screens/groupPage/group_tab_bar2.dart';
 import 'package:jafu/screens/groupPage/group_tab_bar3.dart';
 import 'package:jafu/screens/groupPage/group_tab_bar4.dart';
-import 'package:jafu/viewmodel/group_viewmodel.dart';
-import 'package:jafu/viewmodel/user_viewmodel.dart';
 import 'package:sizer/sizer.dart';
 
+import '../../viewmodel/group_viewmodel.dart';
+import '../../viewmodel/user_viewmodel.dart';
 import '../homePage/home_page.dart';
 
 class InGroupPage extends StatefulWidget {
@@ -51,7 +51,10 @@ class _InGroupPageState extends State<InGroupPage> with SingleTickerProviderStat
             backgroundColor: Color(0xff191720),
             leading: IconButton(
               onPressed: () {
-                Navigator.pop(context);
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) =>  Homepage(widget._userViewmodel)),
+                );
               },
               icon: Image(
                 width: 24,
@@ -96,7 +99,7 @@ class _InGroupPageState extends State<InGroupPage> with SingleTickerProviderStat
                   _tabController.index = 0;
                   return false;
                 },
-                child: GroupTabBar3()
+                child: GroupTabBar3(widget._userViewmodel,widget._groupViewmodel,widget._index)
               ),
               WillPopScope(
                 onWillPop: ()async{

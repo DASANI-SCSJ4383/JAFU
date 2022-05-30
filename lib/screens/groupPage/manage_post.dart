@@ -1,14 +1,13 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:expandable_text/expandable_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg_provider/flutter_svg_provider.dart';
-import 'package:jafu/screens/chatPage/channelPage.dart';
 import 'package:jafu/viewmodel/group_viewmodel.dart';
 import 'package:jafu/viewmodel/user_viewmodel.dart';
 import 'package:sizer/sizer.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
-import 'package:stream_chat_flutter/stream_chat_flutter.dart' as chat;
 
 class ManagePost extends StatefulWidget {
 
@@ -57,19 +56,19 @@ class _ManagePostState extends State<ManagePost> {
                 builder: (thisLowerContext, myState) {
                   return Scaffold(
                     appBar: AppBar(
-                        backgroundColor: Color(0xff191720),
-                        leading: IconButton(
-                          onPressed: () {
-                            Navigator.pop(context);
-                          },
-                          icon: Image(
-                            width: 24,
-                            color: Colors.white,
-                            image: Svg('assets/images/back_arrow.svg'),
-                          ),
+                      backgroundColor: Color(0xff191720),
+                      leading: IconButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                        icon: Image(
+                          width: 24,
+                          color: Colors.white,
+                          image: Svg('assets/images/back_arrow.svg'),
                         ),
-                        title: Text(widget._groupViewmodel.group[widget._index].groupName),
                       ),
+                      title: Text(widget._groupViewmodel.group[widget._index].groupName),
+                    ),
                     body: 
                     Column(
                       children: [
@@ -216,75 +215,84 @@ class _ManagePostState extends State<ManagePost> {
                               child: Padding(
                                 padding: EdgeInsets.all(10),
                                 child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,   
                                   children: [
                                     ListTile(
                                       leading: CircleAvatar(),
                                       title: Text(widget._userViewmodel.user.username),
                                       subtitle: Text(widget._groupViewmodel.post[index].date),
-                                      trailing: Text("RM " + (double.parse(widget._groupViewmodel.post[index].price).toStringAsFixed(2)),style: TextStyle(fontSize: 20)),
-                                    ),
-                                    Column(
-                                      mainAxisAlignment: MainAxisAlignment.start,
-                                      crossAxisAlignment: CrossAxisAlignment.start, 
-                                      children: [
-                                        buildText("It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like)."),
-                                        isReadmore == false ?
-                                      InkWell(
-                                        onTap: (){
-                                          myState(() {
-                                            isReadmore = !isReadmore;
-                                          });
-                                        },
-                                        child: Text("see more",style: TextStyle(color: Colors.blue),)
-                                      ):Container()
-                                      ],
+                                      // trailing: Text("RM " + (double.parse(widget._groupViewmodel.post[index].price).toStringAsFixed(2)),style: TextStyle(fontSize: 20)),
                                     ),
                                     Padding(
-                                      padding: const EdgeInsets.all(5.0),
-                                      child: CarouselSlider.builder(
-                                        itemCount:  widget._groupViewmodel.post[index].picture.length,
-                                        options: CarouselOptions(
-                                          enableInfiniteScroll: false,
-                                          height: 300.sp,
-                                          viewportFraction: 1,
-                                          onPageChanged: (bil, value) {
-                                            myState(() =>
-                                                activeIndex = bil
-                                            );
-                                          }
-                                        ),
-                                        itemBuilder: (context, bil, realIdx) {
-                                        return CachedNetworkImage(
-                                          imageUrl: "http://159.223.63.41/images/" + widget._groupViewmodel.post[index].picture[bil],
-                                          imageBuilder: (context,imageProvider) => Container(
-                                            width: MediaQuery.of(context).size.width,
-                                            decoration: BoxDecoration(
-                                              image: DecorationImage(
-                                                  image: imageProvider,
-                                                  fit: BoxFit.contain),
-                                            ),
-                                          ),
-                                          placeholder: (context, url) => Stack(
-                                            children: [
-                                              Padding(
-                                                padding: EdgeInsets.only(top: 90.sp),
-                                                child: SizedBox(
-                                                  child: CircularProgressIndicator(
-                                                    strokeWidth: 7.sp,
-                                                  ),
-                                                  width: 100.sp,
-                                                  height: 100.sp
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                          errorWidget:
-                                              (context, url, error) =>
-                                                  Icon(Icons.error),
-                                        );
-                                        
-                                      },
+                                      padding: const EdgeInsets.only(right: 5,left: 5),
+                                      child: Row(
+                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Text(widget._groupViewmodel.post[index].title,style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold),),
+                                          Text("RM " + (double.parse(widget._groupViewmodel.post[index].price).toStringAsFixed(2)),style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold)),
+                                        ],
                                       ),
+                                    ),
+                                    SizedBox(height: 5,),
+                                    Padding(
+                                      padding: const EdgeInsets.only(right: 5,left: 5),
+                                      child: Column(
+                                        children: [
+                                          ExpandableText(
+                                            widget._groupViewmodel.post[index].description,
+                                            expandText: 'show more',
+                                            // collapseText: '\nshow less',
+                                            maxLines: 3,
+                                            linkColor: Colors.blue,
+                                          ),
+                                          // buildText(widget._groupViewmodel.post[index].description),
+                                        ],
+                                      ),
+                                    ),
+                                    CarouselSlider.builder(
+                                      itemCount:  widget._groupViewmodel.post[index].picture.length,
+                                      options: CarouselOptions(
+                                        enableInfiniteScroll: false,
+                                        height: 300.sp,
+                                        viewportFraction: 1,
+                                        onPageChanged: (bil, value) {
+                                          myState(() =>
+                                              activeIndex = bil
+                                          );
+                                        }
+                                      ),
+                                      itemBuilder: (context, bil, realIdx) {
+                                      return CachedNetworkImage(
+                                        imageUrl: "http://159.223.63.41/images/" + widget._groupViewmodel.post[index].picture[bil],
+                                        imageBuilder: (context,imageProvider) => Container(
+                                          width: MediaQuery.of(context).size.width,
+                                          decoration: BoxDecoration(
+                                            image: DecorationImage(
+                                                image: imageProvider,
+                                                fit: BoxFit.contain),
+                                          ),
+                                        ),
+                                        placeholder: (context, url) => Stack(
+                                          children: [
+                                            Padding(
+                                              padding: EdgeInsets.only(top: 90.sp),
+                                              child: SizedBox(
+                                                child: CircularProgressIndicator(
+                                                  strokeWidth: 7.sp,
+                                                ),
+                                                width: 100.sp,
+                                                height: 100.sp
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        errorWidget:
+                                            (context, url, error) =>
+                                                Icon(Icons.error),
+                                      );
+                                      
+                                    },
                                     ),
                                     Center(
                                       child: AnimatedSmoothIndicator(
@@ -305,30 +313,48 @@ class _ManagePostState extends State<ManagePost> {
                                     Row(
                                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                                       children: [
-                                        Row(
-                                          children: const [
-                                            Icon(Icons.comment_rounded,color: Colors.grey,),
-                                            SizedBox(width: 8),
-                                            Text("Comment"),
-                                          ],
+                                        InkWell(
+                                          onTap: (){
+
+                                          },
+                                          child: Row(
+                                            children: const [
+                                              Icon(Icons.comment_rounded,color: Colors.grey,),
+                                              SizedBox(width: 8),
+                                              Text("Comment"),
+                                            ],
+                                          ),
                                         ),
-                                        Row(
-                                          children: const [
-                                            Icon(Icons.edit,color: Colors.grey,),
-                                            SizedBox(width: 8),
-                                            Text("Edit"),
-                                          ],
+                                        InkWell(
+                                          onTap: ()async{
+                                            final result = await Navigator.pushNamed(context, "/editPost",arguments: [widget._userViewmodel,widget._groupViewmodel,index]);
+                                            if(result != null){
+                                              setState(() {});
+                                            }
+                                          },
+                                          child: Row(
+                                            children: const [
+                                              Icon(Icons.edit,color: Colors.grey,),
+                                              SizedBox(width: 8),
+                                              Text("Edit"),
+                                            ],
+                                          ),
                                         ),
                                         InkWell(
                                           onTap: ()async{
                                             
                                           },
-                                          child: Row(
-                                            children: const [
-                                              Icon(Icons.delete_forever,color: Colors.grey),
-                                              SizedBox(width: 8),
-                                              Text("Delete"),
-                                            ],
+                                          child: InkWell(
+                                            onTap: (){
+
+                                            },
+                                            child: Row(
+                                              children: const [
+                                                Icon(Icons.delete_forever,color: Colors.grey),
+                                                SizedBox(width: 8),
+                                                Text("Delete"),
+                                              ],
+                                            ),
                                           ),
                                         ),
                                       ],

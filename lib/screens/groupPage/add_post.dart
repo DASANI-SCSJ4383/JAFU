@@ -172,7 +172,7 @@ class _AddPostState extends State<AddPost> {
                   }else{
             
                     Post newPost = Post();
-                    newPost.postTitle = name.text;
+                    newPost.title = name.text;
                     newPost.price = price.text;
                     newPost.description = detail.text;
             

@@ -46,21 +46,21 @@ void main() async{
         // initialRoute: '/',
         builder: (context, child) {
           return chat.StreamChat(
-          streamChatThemeData: chat.StreamChatThemeData(
-            otherMessageTheme: chat.MessageThemeData(
-              messageTextStyle: TextStyle(
-                fontWeight: FontWeight.bold, color: Colors.black, fontSize: 20,
-              )
-            ),
-            ownMessageTheme: chat.MessageThemeData(
-              messageTextStyle: TextStyle(
-                fontWeight: FontWeight.bold, color: Colors.black, fontSize: 20,
+            streamChatThemeData: chat.StreamChatThemeData(
+              otherMessageTheme: chat.MessageThemeData(
+                messageTextStyle: TextStyle(
+                  fontWeight: FontWeight.bold, color: Colors.black, fontSize: 20,
+                )
               ),
-              avatarTheme: chat.AvatarThemeData(
-                constraints: BoxConstraints(maxWidth: 80, maxHeight: 80),
-                borderRadius: BorderRadius.circular(120),
-              )
-            )
+              ownMessageTheme: chat.MessageThemeData(
+                messageTextStyle: TextStyle(
+                  fontWeight: FontWeight.bold, color: Colors.black, fontSize: 20,
+                ),
+                avatarTheme: chat.AvatarThemeData(
+                  constraints: BoxConstraints(maxWidth: 80, maxHeight: 80),
+                  borderRadius: BorderRadius.circular(120),
+                )
+              ),
             ),
             client: client, 
             child: chat.ChannelsBloc(

@@ -94,7 +94,6 @@ class _AuthActionButtonState extends State<AuthActionButton> {
     }
     Navigator.pop(context,null);
     Navigator.pop(context,null);
-    // print("ooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo");
     // Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => Homepage(widget._userviewmodel)));
   }
 

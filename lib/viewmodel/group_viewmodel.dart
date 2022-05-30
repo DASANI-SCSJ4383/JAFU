@@ -2,6 +2,7 @@ import 'package:jafu/app/dependencies.dart';
 import 'package:jafu/services/groupmanagement/group_service.dart';
 import 'package:jafu/viewmodel/viewmodel.dart';
 
+import '../models/cart.dart';
 import '../models/post.dart';
 
 class GroupViewmodel extends Viewmodel {
@@ -11,6 +12,7 @@ class GroupViewmodel extends Viewmodel {
   List _searchGroup = [];
   List _group = [];
   List _post = [];
+  List _cart = [];
 
   get searchGroup => _searchGroup;
   set searchGroup(value) => _searchGroup = value;
@@ -20,6 +22,9 @@ class GroupViewmodel extends Viewmodel {
 
   get post => _post;
   set post(value) => _post = value;
+
+  get cart => _cart;
+  set cart(value) => _cart = value;
   
   Future<String> createGroup(String name,String groupDescription, String id) async {
     String a = await groupService.createGroup(name,groupDescription,id);
@@ -68,6 +73,20 @@ class GroupViewmodel extends Viewmodel {
       }
     }
     _post = _temp;
+  }
+
+  Future<String> editPost(Post _post) async {
+    String result = await groupService.editPost(_post);
+    return result;
+  }
+
+  Future<String> addToCart(String userID,String postID,String groupID) async {
+    String a = await groupService.addToCart(userID,postID,groupID);
+    return a;
+  }
+
+  Future<void> getCart(String groupID,String userID) async {
+    _cart = await groupService.getCart(groupID,userID);
   }
 
 }
