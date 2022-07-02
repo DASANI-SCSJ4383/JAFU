@@ -1,7 +1,7 @@
-cmake_minimum_required(VERSION 3.15)
-project(jafu LANGUAGES CXX)
+cmake_minimum_required(VERSION 3.14)
+project(assingment_2 LANGUAGES CXX)
 
-set(BINARY_NAME "jafu")
+set(BINARY_NAME "assingment_2")
 
 cmake_policy(SET CMP0063 NEW)
 
