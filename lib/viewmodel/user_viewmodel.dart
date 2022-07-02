@@ -1,6 +1,7 @@
-import 'package:jafu/app/dependencies.dart';
-import 'package:jafu/models/user.dart';
-import 'package:jafu/services/auth/auth_service.dart';
+import 'package:assingment_2/app/dependencies.dart';
+
+import '../model/user.dart';
+import '../services/auth/auth_service.dart';
 
 class UserViewmodel{
   AuthService get _service => dependency();

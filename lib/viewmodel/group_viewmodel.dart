@@ -1,18 +1,15 @@
-import 'package:jafu/app/dependencies.dart';
-import 'package:jafu/services/groupmanagement/group_service.dart';
-import 'package:jafu/viewmodel/viewmodel.dart';
 
-import '../models/cart.dart';
-import '../models/post.dart';
+import '../app/dependencies.dart';
+import '../model/post.dart';
+import '../services/group/group_service.dart';
 
-class GroupViewmodel extends Viewmodel {
+class GroupViewmodel{
 
   GroupService get groupService => dependency();
 
   List _searchGroup = [];
   List _group = [];
   List _post = [];
-  List _cart = [];
 
   get searchGroup => _searchGroup;
   set searchGroup(value) => _searchGroup = value;
@@ -23,29 +20,7 @@ class GroupViewmodel extends Viewmodel {
   get post => _post;
   set post(value) => _post = value;
 
-  get cart => _cart;
-  set cart(value) => _cart = value;
-  
-  Future<String> createGroup(String name,String groupDescription, String id) async {
-    String a = await groupService.createGroup(name,groupDescription,id);
-    return a;
-  }
-
-  Future<String> joinGroup(String userID,String groupID) async {
-    String a = await groupService.joinGroup(userID,groupID);
-    return a;
-  }
-
-  Future<void> getGroup(String userID) async {
-    _group = await groupService.getGroup(userID);
-  }
-
-  Future<String> createPost(Post _post,String groupID,String userID) async {
-    String result = await groupService.addItem(_post,groupID,userID);
-    return result;
-  }
-
-  Future<void> getGroupPost(String groupID) async {
+  Future<List<Post>> getGroupPost(String groupID) async {
     List _temp = [];
     _temp = await groupService.getGroupPost(groupID);
     for(int i=0;i<_temp.length;i++){
@@ -58,6 +33,7 @@ class GroupViewmodel extends Viewmodel {
       }
     }
     _post = _temp;
+    return _post;
   }
 
   Future<void> getMyPost(String groupID,String userID) async {
@@ -79,14 +55,5 @@ class GroupViewmodel extends Viewmodel {
     String result = await groupService.editPost(_post);
     return result;
   }
-
-  Future<String> addToCart(String userID,String postID,String groupID) async {
-    String a = await groupService.addToCart(userID,postID,groupID);
-    return a;
-  }
-
-  Future<void> getCart(String groupID,String userID) async {
-    _cart = await groupService.getCart(groupID,userID);
-  }
-
+  
 }
